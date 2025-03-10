@@ -18,6 +18,7 @@ public class DocumentsHandler {
         if (publication.getLocation() == null) {
             publication.setLocation(extractValue(publicationText, "[A-Z]+\\s’\\d{2},\\s[A-Za-z]+\\s\\d{1,2}–\\d{1,2},\\s\\d{4},\\s(.*)"));
         }
+        publication.setAbstractDescription(extractValue(publicationText, "(?i)abstract\\s*([\\s\\S]*?)(?=(?:CCS CONCEPTS|KEYWORDS|ACM Reference Format|1 INTRODUCTION|\\Z))"));
         return publication;
     }
 

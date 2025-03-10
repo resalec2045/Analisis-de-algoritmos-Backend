@@ -50,7 +50,7 @@ public class SeleniumHandler {
         WebElement acmLink = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//h3[@class='result-title']/a[contains(.,'ACM Digital Library')]")));
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.className("onload-background")));
         acmLink.click();
-        System.out.println("Enlace 'ACM Digital Library' clicado.");
+        System.out.println("Enlace 'ACM Digital Library' clickeado.");
     }
 
     private void searchComputational() {

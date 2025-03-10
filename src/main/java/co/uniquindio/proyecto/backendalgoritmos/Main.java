@@ -11,7 +11,6 @@ public class Main {
 
     public static void main(String[] args) {
         String directorioActual = System.getProperty("user.dir");
-
         String bibFilePath = directorioActual + "/src/main/resources/co.uniquindio.proyecto.backendalgoritmos/keywords.bib";
         PDFReader pdfReadernew = new PDFReader();
         pdfReadernew.ejecute();

@@ -16,9 +16,10 @@ import java.util.Set;
 
 public class PDFReader {
 
-    private static final String PDF_FOLDER_PATH = "/Users/mvalencia/Desktop/Backend Algoritmos/backendalgoritmos/src/main/resources/co/uniquindio/proyecto/backendalgoritmos/";
-    private static final String BIB_FILE_PATH = "/Users/mvalencia/Desktop/Backend Algoritmos/backendalgoritmos/src/main/resources/co/uniquindio/proyecto/backendalgoritmos/keywords.bib";
-    private static final String DUPLICATES_BIB_FILE_PATH = "/Users/mvalencia/Desktop/Backend Algoritmos/backendalgoritmos/src/main/resources/co/uniquindio/proyecto/backendalgoritmos/duplicates.bib";
+    private static final String directorioActual = System.getProperty("user.dir");
+    private static final String PDF_FOLDER_PATH = directorioActual+ "/src/main/resources/co.uniquindio.proyecto.backendalgoritmos/";
+    private static final String BIB_FILE_PATH = directorioActual+ "/src/main/resources/co.uniquindio.proyecto.backendalgoritmos/keywords.bib";
+    private static final String DUPLICATES_BIB_FILE_PATH = directorioActual+ "/src/main/resources/co.uniquindio.proyecto.backendalgoritmos/duplicates.bib";
 
     private final DocumentsHandler publicationProcessor;
     private final Set<String> processedHashes = new HashSet<>();
@@ -89,6 +90,7 @@ public class PDFReader {
         writeAttribute(writer, "year", String.valueOf(publication.getYear()));
         writeAttribute(writer, "location", publication.getLocation());
         writeAttribute(writer, "keywords", publication.getKeywords());
+        writeAttribute(writer, "abstract", publication.getAbstractDescription());
         writer.write("}\n\n");
     }
 

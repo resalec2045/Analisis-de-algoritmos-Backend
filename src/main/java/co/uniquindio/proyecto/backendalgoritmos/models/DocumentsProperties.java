@@ -2,21 +2,23 @@ package co.uniquindio.proyecto.backendalgoritmos.models;
 
 public class DocumentsProperties {
 
-    public String author;
-    public String title;
-    public int year;
-    public String keywords;
-    public String location;
+    private String author;
+    private String title;
+    private int year;
+    private String keywords;
+    private String location;
+    private String abstractDescription;
 
     public DocumentsProperties() {
     }
 
-    public DocumentsProperties(String author, String title, int year, String keywords, String location) {
+    public DocumentsProperties(String author, String title, int year, String keywords, String location, String abstractDescription) {
         this.author = author;
         this.title = title;
         this.year = year;
         this.keywords = keywords;
         this.location = location;
+        this.abstractDescription = abstractDescription;
     }
 
     public String getAuthor() {
@@ -59,6 +61,14 @@ public class DocumentsProperties {
         this.location = location;
     }
 
+    public String getAbstractDescription() {
+        return abstractDescription;
+    }
+
+    public void setAbstractDescription(String abstractDescription) {
+        this.abstractDescription = abstractDescription;
+    }
+
     @Override
     public String toString() {
         return "DocumentsProperties{" +
@@ -67,6 +77,7 @@ public class DocumentsProperties {
                 ", year=" + year +
                 ", keywords='" + keywords + '\'' +
                 ", location='" + location + '\'' +
+                ", abstractDescription='" + abstractDescription + '\'' +
                 '}';
     }
 }

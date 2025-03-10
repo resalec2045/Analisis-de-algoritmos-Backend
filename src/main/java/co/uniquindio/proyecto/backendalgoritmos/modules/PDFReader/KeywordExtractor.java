@@ -56,8 +56,9 @@ public class KeywordExtractor {
         article.setYear(extractYear(articleContent));
         article.setKeywords(extractAttribute(articleContent, "keywords"));
         article.setLocation(extractAttribute(articleContent, "location"));
+        article.setAbstractDescription(extractAttribute(articleContent, "abstract"));
 
-        if (article.title == null) {
+        if (article.getTitle() == null) {
             return null;
         }
 
