@@ -63,8 +63,8 @@ public class InformationImpl implements InformationServicio {
         results.add(createResult("HeapSort", timeHeapSort));
 
         // 7. Gnome Sort
-//        long timeGnomeSort = SortingAlgorithms.gnomeSort(new ArrayList<>(sortableList));
-//        results.add(createResult("GnomeSort", timeGnomeSort));
+        long timeGnomeSort = SortingAlgorithms.gnomeSort(new ArrayList<>(sortableList));
+        results.add(createResult("GnomeSort", timeGnomeSort));
 
         // 8. Binary Insertion Sort
         long timeBinaryInsertionSort = SortingAlgorithms.binaryInsertionSort(new ArrayList<>(sortableList));
@@ -78,9 +78,9 @@ public class InformationImpl implements InformationServicio {
         long timeBucketSort = SortingAlgorithms.bucketSort(new ArrayList<>(sortableList));
         results.add(createResult("BucketSort", timeBucketSort));
 
-        // 11. Shell Sort
-        long timeShellSort = SortingAlgorithms.shellSort(new ArrayList<>(sortableList));
-        results.add(createResult("ShellSort", timeShellSort));
+        // 11. Bitonic Sort
+        long timeBitonicSort = SortingAlgorithms.bitonicSort(new ArrayList<>(sortableList));
+        results.add(createResult("BitonicSort", timeBitonicSort));
 
         // 12. Radix Sort
         long timeRadixSort = SortingAlgorithms.radixSort(new ArrayList<>(sortableList));

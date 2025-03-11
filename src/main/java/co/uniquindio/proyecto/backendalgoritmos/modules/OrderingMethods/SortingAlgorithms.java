@@ -220,18 +220,22 @@ public class SortingAlgorithms {
     // 9. Gnome Sort
     public static long gnomeSort(List<List<String>> list) {
         long startTime = System.nanoTime();
-        int index = 0;
+
+        if (list == null || list.size() <= 1) {
+            return System.nanoTime() - startTime; // No hay nada que ordenar
+        }
+
+        int index = 1; // Empezamos en 1 porque el primer elemento ya está "ordenado"
+
         while (index < list.size()) {
-            if (index == 0) {
-                index++;
-            }
-            if (compareLists(list.get(index), list.get(index - 1)) >= 0) {
-                index++;
-            } else {
+            if (index > 0 && compareLists(list.get(index), list.get(index - 1)) < 0) {
                 Collections.swap(list, index, index - 1);
-                index--;
+                index--; // Retrocede si el elemento está mal ubicado
+            } else {
+                index++; // Avanza cuando está en orden
             }
         }
+
         return System.nanoTime() - startTime;
     }
 
@@ -270,22 +274,44 @@ public class SortingAlgorithms {
         return Integer.compare(a.size(), b.size());
     }
 
-    // 11. Shell Sort
-    public static long shellSort(List<List<String>> list) {
+    // 11. Bitonic Sort (Para listas de listas de Strings)
+    public static long bitonicSort(List<List<String>> list) {
         long startTime = System.nanoTime();
-        int n = list.size();
-        for (int gap = n / 2; gap > 0; gap /= 2) {
-            for (int i = gap; i < n; i++) {
-                List<String> key = list.get(i);
-                int j = i;
-                while (j >= gap && compareLists(list.get(j - gap), key) > 0) {
-                    list.set(j, list.get(j - gap));
-                    j -= gap;
-                }
-                list.set(j, key);
-            }
+
+        if (list == null || list.size() <= 1) {
+            return System.nanoTime() - startTime; // No hay nada que ordenar
         }
+
+        bitonicSortHelper(list, 0, list.size(), true);
+
         return System.nanoTime() - startTime;
+    }
+    private static void bitonicSortHelper(List<List<String>> list, int low, int count, boolean ascending) {
+        if (count > 1) {
+            int k = count / 2;
+
+            // Ordenar la primera mitad en orden ascendente
+            bitonicSortHelper(list, low, k, true);
+            // Ordenar la segunda mitad en orden descendente
+            bitonicSortHelper(list, low + k, k, false);
+            // Fusionar ambas mitades en orden ascendente o descendente
+            bitonicMerge(list, low, count, ascending);
+        }
+    }
+    private static void bitonicMerge(List<List<String>> list, int low, int count, boolean ascending) {
+        if (count > 1) {
+            int k = count / 2;
+            for (int i = low; i < low + k; i++) {
+                compareAndSwap(list, i, i + k, ascending);
+            }
+            bitonicMerge(list, low, k, ascending);
+            bitonicMerge(list, low + k, k, ascending);
+        }
+    }
+    private static void compareAndSwap(List<List<String>> list, int i, int j, boolean ascending) {
+        if ((compareLists(list.get(i), list.get(j)) > 0) == ascending) {
+            Collections.swap(list, i, j);
+        }
     }
 
     // 12. Radix Sort
