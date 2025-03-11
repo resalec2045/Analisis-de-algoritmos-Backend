@@ -58,9 +58,9 @@ public class KeywordExtractor {
         article.setLocation(extractAttribute(articleContent, "location"));
         article.setAbstractDescription(extractAttribute(articleContent, "abstract"));
 
-        if (article.getTitle() == null) {
-            return null;
-        }
+//        if (article.getTitle() == null) {
+//            return null;
+//        }
 
         return article;
     }
