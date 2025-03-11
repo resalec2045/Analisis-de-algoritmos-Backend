@@ -2,9 +2,8 @@ package co.uniquindio.proyecto.backendalgoritmos.servicio.implementaciones;
 
 import co.uniquindio.proyecto.backendalgoritmos.models.DocumentsProperties;
 import co.uniquindio.proyecto.backendalgoritmos.modules.OrderingMethods.SortingAlgorithms;
-import co.uniquindio.proyecto.backendalgoritmos.modules.PDFReader.KeywordExtractor;
+import co.uniquindio.proyecto.backendalgoritmos.modules.PDFReader.DocumentsExtractor;
 import co.uniquindio.proyecto.backendalgoritmos.modules.PDFReader.PDFReader;
-import co.uniquindio.proyecto.backendalgoritmos.modules.Selenium.SeleniumHandler;
 import co.uniquindio.proyecto.backendalgoritmos.servicio.interfaces.InformationServicio;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,7 @@ public class InformationImpl implements InformationServicio {
         String bibFilePath = directorioActual + "/src/main/resources/co.uniquindio.proyecto.backendalgoritmos/keywords.bib";
         PDFReader pdfReadernew = new PDFReader();
         pdfReadernew.ejecute();
-        List<DocumentsProperties> allSortedKeywords = KeywordExtractor.readBibFile(bibFilePath);
+        List<DocumentsProperties> allSortedKeywords = DocumentsExtractor.readBibFile(bibFilePath);
 
         for (int i = 0; i < allSortedKeywords.size(); i++) {
             String keywords = allSortedKeywords.get(i).getAuthor();
