@@ -70,6 +70,22 @@ public class InformationImpl implements InformationServicio {
         long timeBinaryInsertionSort = SortingAlgorithms.binaryInsertionSort(new ArrayList<>(sortableList));
         results.add(createResult("BinaryInsertionSort", timeBinaryInsertionSort));
 
+        // 9. pigeonholeSort
+        long timePigeonholeSort = SortingAlgorithms.pigeonholeSort(new ArrayList<>(sortableList));
+        results.add(createResult("PigeonholeSort", timePigeonholeSort));
+
+        // 10. Bucket Sort
+        long timeBucketSort = SortingAlgorithms.bucketSort(new ArrayList<>(sortableList));
+        results.add(createResult("BucketSort", timeBucketSort));
+
+        // 11. Shell Sort
+        long timeShellSort = SortingAlgorithms.shellSort(new ArrayList<>(sortableList));
+        results.add(createResult("ShellSort", timeShellSort));
+
+        // 12. Radix Sort
+        long timeRadixSort = SortingAlgorithms.radixSort(new ArrayList<>(sortableList));
+        results.add(createResult("RadixSort", timeRadixSort));
+
         return results;
     }
 

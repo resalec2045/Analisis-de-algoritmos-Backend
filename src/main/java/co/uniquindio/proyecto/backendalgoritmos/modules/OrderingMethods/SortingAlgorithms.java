@@ -68,7 +68,7 @@ public class SortingAlgorithms {
     }
 
     // 5. Pigeonhole Sort (para números enteros)
-    public static long pigeonholeSort(int[] arr) {
+    public static long pigeonholeSortNumber(int[] arr) {
         long startTime = System.nanoTime();
         if (arr == null || arr.length <= 1) return 0;
 
@@ -86,9 +86,36 @@ public class SortingAlgorithms {
         }
         return System.nanoTime() - startTime;
     }
+    public static long pigeonholeSort(List<List<String>> list) {
+        long startTime = System.nanoTime();
+        if (list == null || list.isEmpty()) return 0;
+
+        for (List<String> sublist : list) {
+            if (sublist == null || sublist.isEmpty()) continue;
+
+            // Obtener el mínimo y máximo lexicográfico
+            String min = Collections.min(sublist);
+            String max = Collections.max(sublist);
+
+            int range = max.compareTo(min) + 1;
+            TreeMap<String, Integer> pigeonholes = new TreeMap<>();
+
+            for (String value : sublist) {
+                pigeonholes.put(value, pigeonholes.getOrDefault(value, 0) + 1);
+            }
+
+            sublist.clear();
+            for (Map.Entry<String, Integer> entry : pigeonholes.entrySet()) {
+                for (int i = 0; i < entry.getValue(); i++) {
+                    sublist.add(entry.getKey());
+                }
+            }
+        }
+        return System.nanoTime() - startTime;
+    }
 
     // 6. Bucket Sort (para flotantes)
-    public static long bucketSort(float[] arr) {
+    public static long bucketSortNumber(float[] arr) {
         long startTime = System.nanoTime();
         if (arr == null || arr.length <= 1) return 0;
 
@@ -104,6 +131,32 @@ public class SortingAlgorithms {
         int index = 0;
         for (List<Float> bucket : buckets) {
             for (float value : bucket) arr[index++] = value;
+        }
+        return System.nanoTime() - startTime;
+    }
+    public static long bucketSort(List<List<String>> list) {
+        long startTime = System.nanoTime();
+        if (list == null || list.isEmpty()) return 0;
+
+        for (List<String> sublist : list) {
+            if (sublist == null || sublist.isEmpty()) continue;
+
+            int n = sublist.size();
+            List<List<String>> buckets = new ArrayList<>(n);
+            for (int i = 0; i < n; i++) buckets.add(new ArrayList<>());
+
+            String min = Collections.min(sublist);
+            String max = Collections.max(sublist);
+
+            for (String value : sublist) {
+                int bucketIndex = (int) ((double) (value.compareTo(min)) / (max.compareTo(min) + 1) * n);
+                buckets.get(bucketIndex).add(value);
+            }
+
+            for (List<String> bucket : buckets) Collections.sort(bucket);
+
+            sublist.clear();
+            for (List<String> bucket : buckets) sublist.addAll(bucket);
         }
         return System.nanoTime() - startTime;
     }
@@ -216,4 +269,77 @@ public class SortingAlgorithms {
         }
         return Integer.compare(a.size(), b.size());
     }
+
+    // 11. Shell Sort
+    public static long shellSort(List<List<String>> list) {
+        long startTime = System.nanoTime();
+        int n = list.size();
+        for (int gap = n / 2; gap > 0; gap /= 2) {
+            for (int i = gap; i < n; i++) {
+                List<String> key = list.get(i);
+                int j = i;
+                while (j >= gap && compareLists(list.get(j - gap), key) > 0) {
+                    list.set(j, list.get(j - gap));
+                    j -= gap;
+                }
+                list.set(j, key);
+            }
+        }
+        return System.nanoTime() - startTime;
+    }
+
+    // 12. Radix Sort
+    public static long radixSort(List<List<String>> list) {
+        long startTime = System.nanoTime();
+        int maxLen = getMaxLen(list);
+
+        for (int pos = maxLen - 1; pos >= 0; pos--) {
+            countingSort(list, pos);
+        }
+
+        return System.nanoTime() - startTime;
+    }
+
+    private static int getMaxLen(List<List<String>> list) {
+        int maxLen = 0;
+        for (List<String> sublist : list) {
+            int length = String.join("", sublist).length();
+            maxLen = Math.max(maxLen, length);
+        }
+        return maxLen;
+    }
+
+    private static void countingSort(List<List<String>> list, int pos) {
+        int n = list.size();
+        List<List<String>> output = new ArrayList<>(Collections.nCopies(n, null));
+        int[] count = new int[256]; // Para caracteres ASCII
+
+        // Inicializar el arreglo de conteo
+        Arrays.fill(count, 0);
+
+        // Contar la ocurrencia de cada carácter en la posición dada
+        for (List<String> sublist : list) {
+            String key = String.join("", sublist);
+            char ch = (pos < key.length()) ? key.charAt(pos) : 0;
+            count[ch]++;
+        }
+
+        // Transformar count para obtener las posiciones finales
+        for (int i = 1; i < 256; i++) {
+            count[i] += count[i - 1];
+        }
+
+        // Construir la lista ordenada
+        for (int i = n - 1; i >= 0; i--) {
+            String key = String.join("", list.get(i));
+            char ch = (pos < key.length()) ? key.charAt(pos) : 0;
+            output.set(--count[ch], list.get(i));
+        }
+
+        // Copiar los resultados de vuelta a la lista original
+        for (int i = 0; i < n; i++) {
+            list.set(i, output.get(i));
+        }
+    }
+
 }
