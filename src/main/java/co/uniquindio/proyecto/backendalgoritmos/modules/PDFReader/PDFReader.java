@@ -89,7 +89,6 @@ public class PDFReader {
         writeAttribute(writer, "title", publication.getTitle());
         writeAttribute(writer, "year", String.valueOf(publication.getYear()));
         writeAttribute(writer, "location", publication.getLocation());
-        writeAttribute(writer, "keywords", publication.getKeywords());
         writeAttribute(writer, "abstract", publication.getAbstractDescription());
         writer.write("}\n\n");
     }

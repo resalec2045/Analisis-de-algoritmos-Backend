@@ -13,7 +13,6 @@ public class DocumentsHandler {
         publication.setAuthor(extractValue(publicationText, "ACM Reference Format:\\s*(.*?)\\.\\s*\\d{4}"));
         publication.setTitle(extractValue(publicationText, "^(.+)\\n"));
         publication.setYear(extractIntValue(publicationText, "ACM Reference Format:\\s*.*?\\.\\s*(\\d{4})"));
-        publication.setKeywords(extractValue(publicationText, "KEYWORDS\\s*(.*)"));
         publication.setLocation(extractValue(publicationText, "[A-Z]+ \\d{4},.*,\\s(.*)"));
         if (publication.getLocation() == null) {
             publication.setLocation(extractValue(publicationText, "[A-Z]+\\s’\\d{2},\\s[A-Za-z]+\\s\\d{1,2}–\\d{1,2},\\s\\d{4},\\s(.*)"));

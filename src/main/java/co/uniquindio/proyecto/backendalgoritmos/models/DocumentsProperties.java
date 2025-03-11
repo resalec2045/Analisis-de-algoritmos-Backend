@@ -1,22 +1,22 @@
 package co.uniquindio.proyecto.backendalgoritmos.models;
 
+import java.util.Objects;
+
 public class DocumentsProperties {
 
     private String author;
     private String title;
     private int year;
-    private String keywords;
     private String location;
     private String abstractDescription;
 
     public DocumentsProperties() {
     }
 
-    public DocumentsProperties(String author, String title, int year, String keywords, String location, String abstractDescription) {
+    public DocumentsProperties(String author, String title, int year, String location, String abstractDescription) {
         this.author = author;
         this.title = title;
         this.year = year;
-        this.keywords = keywords;
         this.location = location;
         this.abstractDescription = abstractDescription;
     }
@@ -45,14 +45,6 @@ public class DocumentsProperties {
         this.year = year;
     }
 
-    public String getKeywords() {
-        return keywords;
-    }
-
-    public void setKeywords(String keywords) {
-        this.keywords = keywords;
-    }
-
     public String getLocation() {
         return location;
     }
@@ -75,9 +67,20 @@ public class DocumentsProperties {
                 "author='" + author + '\'' +
                 ", title='" + title + '\'' +
                 ", year=" + year +
-                ", keywords='" + keywords + '\'' +
                 ", location='" + location + '\'' +
                 ", abstractDescription='" + abstractDescription + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        DocumentsProperties that = (DocumentsProperties) o;
+        return year == that.year && Objects.equals(author, that.author) && Objects.equals(title, that.title) && Objects.equals(location, that.location) && Objects.equals(abstractDescription, that.abstractDescription);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(author, title, year, location, abstractDescription);
     }
 }
