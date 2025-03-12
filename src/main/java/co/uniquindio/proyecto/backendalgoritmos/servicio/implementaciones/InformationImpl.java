@@ -1,11 +1,12 @@
 package co.uniquindio.proyecto.backendalgoritmos.servicio.implementaciones;
 
+import co.uniquindio.proyecto.backendalgoritmos.models.AuthorSortingResults;
 import co.uniquindio.proyecto.backendalgoritmos.models.DocumentsProperties;
+import co.uniquindio.proyecto.backendalgoritmos.models.SortingResult;
 import co.uniquindio.proyecto.backendalgoritmos.modules.OrderingMethods.SortingAlgorithms;
 import co.uniquindio.proyecto.backendalgoritmos.modules.PDFReader.DocumentsExtractor;
 import co.uniquindio.proyecto.backendalgoritmos.modules.PDFReader.PDFReader;
 import co.uniquindio.proyecto.backendalgoritmos.servicio.interfaces.InformationServicio;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -14,85 +15,166 @@ import java.util.*;
 public class InformationImpl implements InformationServicio {
 
     @Override
-    public List<Map<String, Object>> getInformation() {
-        List<String> list = new ArrayList<>();
+    public List<Object> getInformation() {
 
-        // ! Logica de Mariana
+        List<Object> modelFront = new ArrayList<>();
+
+        // Obtener el directorio actual y leer el archivo .bib
         String directorioActual = System.getProperty("user.dir");
         String bibFilePath = directorioActual + "/src/main/resources/co.uniquindio.proyecto.backendalgoritmos/keywords.bib";
+
         PDFReader pdfReadernew = new PDFReader();
         pdfReadernew.ejecute();
         List<DocumentsProperties> allSortedKeywords = DocumentsExtractor.readBibFile(bibFilePath);
 
-        for (int i = 0; i < allSortedKeywords.size(); i++) {
-            String keywords = allSortedKeywords.get(i).getAuthor();
-            System.out.println("Palabras clave del artículo " + (i + 1) + ": keywords = " + keywords);
+        modelFront.add(getAuthorSortingResults(allSortedKeywords));
+        modelFront.add(getTitleSortingResults(allSortedKeywords));
+        modelFront.add(getLocationSortingResults(allSortedKeywords));
+        modelFront.add(getDescriptionSortingResults(allSortedKeywords));
+
+        // Devolver el objeto con la lista estructurada bajo el autor
+        return modelFront;
+
+    }
+
+    private AuthorSortingResults getAuthorSortingResults(List<DocumentsProperties> allSortedKeywords) {
+        List<String> list = new ArrayList<>();
+
+        for (DocumentsProperties doc : allSortedKeywords) {
+            String keywords = doc.getAuthor();
             if (keywords != null) {
                 list.add(keywords);
             }
         }
 
+        // Obtener el nombre del autor (tomando el primero de la lista si existe)
+        String author = "Autores";
+
         // Copia de la lista original para evitar modificarla en cada ordenamiento
         List<List<String>> sortableList = Collections.singletonList(new ArrayList<>(list));
 
-        // Lista para almacenar los resultados
-        List<Map<String, Object>> results = new ArrayList<>();
+        // Lista de resultados de los algoritmos
+        List<SortingResult> results = new ArrayList<>();
+        results.add(new SortingResult("TimSort", SortingAlgorithms.timSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("CombSort", SortingAlgorithms.combSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("SelectionSort", SortingAlgorithms.selectionSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("TreeSort", SortingAlgorithms.treeSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("QuickSort", SortingAlgorithms.quickSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("HeapSort", SortingAlgorithms.heapSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("GnomeSort", SortingAlgorithms.gnomeSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("BinaryInsertionSort", SortingAlgorithms.binaryInsertionSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("PigeonholeSort", SortingAlgorithms.pigeonholeSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("BucketSort", SortingAlgorithms.bucketSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("BitonicSort", SortingAlgorithms.bitonicSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("RadixSort", SortingAlgorithms.radixSort(new ArrayList<>(sortableList))));
 
-        // 1. TimSort
-        long timeTimSort = SortingAlgorithms.timSort(new ArrayList<>(sortableList));
-        results.add(createResult("TimSort", timeTimSort));
+        return new AuthorSortingResults(author, results);
 
-        // 2. Comb Sort
-        long timeCombSort = SortingAlgorithms.combSort(new ArrayList<>(sortableList));
-        results.add(createResult("CombSort", timeCombSort));
-
-        // 3. Selection Sort
-        long timeSelectionSort = SortingAlgorithms.selectionSort(new ArrayList<>(sortableList));
-        results.add(createResult("SelectionSort", timeSelectionSort));
-
-        // 4. Tree Sort
-        long timeTreeSort = SortingAlgorithms.treeSort(new ArrayList<>(sortableList));
-        results.add(createResult("TreeSort", timeTreeSort));
-
-        // 5. QuickSort
-        long timeQuickSort = SortingAlgorithms.quickSort(new ArrayList<>(sortableList));
-        results.add(createResult("QuickSort", timeQuickSort));
-
-        // 6. HeapSort
-        long timeHeapSort = SortingAlgorithms.heapSort(new ArrayList<>(sortableList));
-        results.add(createResult("HeapSort", timeHeapSort));
-
-        // 7. Gnome Sort
-        long timeGnomeSort = SortingAlgorithms.gnomeSort(new ArrayList<>(sortableList));
-        results.add(createResult("GnomeSort", timeGnomeSort));
-
-        // 8. Binary Insertion Sort
-        long timeBinaryInsertionSort = SortingAlgorithms.binaryInsertionSort(new ArrayList<>(sortableList));
-        results.add(createResult("BinaryInsertionSort", timeBinaryInsertionSort));
-
-        // 9. pigeonholeSort
-        long timePigeonholeSort = SortingAlgorithms.pigeonholeSort(new ArrayList<>(sortableList));
-        results.add(createResult("PigeonholeSort", timePigeonholeSort));
-
-        // 10. Bucket Sort
-        long timeBucketSort = SortingAlgorithms.bucketSort(new ArrayList<>(sortableList));
-        results.add(createResult("BucketSort", timeBucketSort));
-
-        // 11. Bitonic Sort
-        long timeBitonicSort = SortingAlgorithms.bitonicSort(new ArrayList<>(sortableList));
-        results.add(createResult("BitonicSort", timeBitonicSort));
-
-        // 12. Radix Sort
-        long timeRadixSort = SortingAlgorithms.radixSort(new ArrayList<>(sortableList));
-        results.add(createResult("RadixSort", timeRadixSort));
-
-        return results;
     }
 
-    private Map<String, Object> createResult(String metodo, long time) {
-        Map<String, Object> result = new HashMap<>();
-        result.put("metodo", metodo);
-        result.put("time", time);
-        return result;
+    private AuthorSortingResults getTitleSortingResults(List<DocumentsProperties> allSortedKeywords) {
+        List<String> list = new ArrayList<>();
+
+        for (DocumentsProperties doc : allSortedKeywords) {
+            String keywords = doc.getTitle();
+            if (keywords != null) {
+                list.add(keywords);
+            }
+        }
+
+        // Obtener el nombre del autor (tomando el primero de la lista si existe)
+        String author = "Titulos";
+
+        // Copia de la lista original para evitar modificarla en cada ordenamiento
+        List<List<String>> sortableList = Collections.singletonList(new ArrayList<>(list));
+
+        // Lista de resultados de los algoritmos
+        List<SortingResult> results = new ArrayList<>();
+        results.add(new SortingResult("TimSort", SortingAlgorithms.timSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("CombSort", SortingAlgorithms.combSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("SelectionSort", SortingAlgorithms.selectionSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("TreeSort", SortingAlgorithms.treeSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("QuickSort", SortingAlgorithms.quickSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("HeapSort", SortingAlgorithms.heapSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("GnomeSort", SortingAlgorithms.gnomeSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("BinaryInsertionSort", SortingAlgorithms.binaryInsertionSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("PigeonholeSort", SortingAlgorithms.pigeonholeSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("BucketSort", SortingAlgorithms.bucketSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("BitonicSort", SortingAlgorithms.bitonicSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("RadixSort", SortingAlgorithms.radixSort(new ArrayList<>(sortableList))));
+
+        return new AuthorSortingResults(author, results);
+
     }
+
+    private AuthorSortingResults getLocationSortingResults(List<DocumentsProperties> allSortedKeywords) {
+        List<String> list = new ArrayList<>();
+
+        for (DocumentsProperties doc : allSortedKeywords) {
+            String keywords = doc.getLocation();
+            if (keywords != null) {
+                list.add(keywords);
+            }
+        }
+
+        // Obtener el nombre del autor (tomando el primero de la lista si existe)
+        String author = "Localizacion";
+
+        // Copia de la lista original para evitar modificarla en cada ordenamiento
+        List<List<String>> sortableList = Collections.singletonList(new ArrayList<>(list));
+
+        // Lista de resultados de los algoritmos
+        List<SortingResult> results = new ArrayList<>();
+        results.add(new SortingResult("TimSort", SortingAlgorithms.timSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("CombSort", SortingAlgorithms.combSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("SelectionSort", SortingAlgorithms.selectionSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("TreeSort", SortingAlgorithms.treeSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("QuickSort", SortingAlgorithms.quickSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("HeapSort", SortingAlgorithms.heapSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("GnomeSort", SortingAlgorithms.gnomeSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("BinaryInsertionSort", SortingAlgorithms.binaryInsertionSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("PigeonholeSort", SortingAlgorithms.pigeonholeSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("BucketSort", SortingAlgorithms.bucketSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("BitonicSort", SortingAlgorithms.bitonicSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("RadixSort", SortingAlgorithms.radixSort(new ArrayList<>(sortableList))));
+
+        return new AuthorSortingResults(author, results);
+
+    }
+
+    private AuthorSortingResults getDescriptionSortingResults(List<DocumentsProperties> allSortedKeywords) {
+        List<String> list = new ArrayList<>();
+
+        for (DocumentsProperties doc : allSortedKeywords) {
+            String keywords = doc.getAbstractDescription();
+            if (keywords != null) {
+                list.add(keywords);
+            }
+        }
+
+        // Obtener el nombre del autor (tomando el primero de la lista si existe)
+        String author = "Abstract Description";
+
+        // Copia de la lista original para evitar modificarla en cada ordenamiento
+        List<List<String>> sortableList = Collections.singletonList(new ArrayList<>(list));
+
+        // Lista de resultados de los algoritmos
+        List<SortingResult> results = new ArrayList<>();
+        results.add(new SortingResult("TimSort", SortingAlgorithms.timSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("CombSort", SortingAlgorithms.combSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("SelectionSort", SortingAlgorithms.selectionSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("TreeSort", SortingAlgorithms.treeSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("QuickSort", SortingAlgorithms.quickSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("HeapSort", SortingAlgorithms.heapSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("GnomeSort", SortingAlgorithms.gnomeSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("BinaryInsertionSort", SortingAlgorithms.binaryInsertionSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("PigeonholeSort", SortingAlgorithms.pigeonholeSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("BucketSort", SortingAlgorithms.bucketSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("BitonicSort", SortingAlgorithms.bitonicSort(new ArrayList<>(sortableList))));
+        results.add(new SortingResult("RadixSort", SortingAlgorithms.radixSort(new ArrayList<>(sortableList))));
+
+        return new AuthorSortingResults(author, results);
+
+    }
+
 }

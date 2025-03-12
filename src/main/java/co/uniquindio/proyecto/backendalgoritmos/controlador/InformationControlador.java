@@ -1,6 +1,7 @@
 package co.uniquindio.proyecto.backendalgoritmos.controlador;
 
 import co.uniquindio.proyecto.backendalgoritmos.dto.MensajeDTO;
+import co.uniquindio.proyecto.backendalgoritmos.models.AuthorSortingResults;
 import co.uniquindio.proyecto.backendalgoritmos.servicio.interfaces.InformationServicio;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,7 +22,7 @@ public class InformationControlador {
     private final InformationServicio informationServicio;
 
     @GetMapping("/getInformation")
-    public ResponseEntity<MensajeDTO<List<Map<String, Object>>>> getInformation() throws Exception {
+    public ResponseEntity<MensajeDTO<List<Object>>> getInformation() throws Exception {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, informationServicio.getInformation()));
     }
 }
