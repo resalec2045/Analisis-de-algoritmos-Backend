@@ -16,11 +16,11 @@ import java.util.Random;
 
 public class ScienceDirectHandler {
 
-    private static final String CHROME_DRIVER_PATH = "/Users/mvalencia/Downloads/chromedriver-mac-x64/chromedriver";
+    private static final String directorioActual = System.getProperty("user.dir");
+    private static final String CHROME_DRIVER_PATH = directorioActual + "/src/main/resources/drivers/chromedriver-mac-x64/chromedriver";
     private static final String BASE_URL = "https://www-sciencedirect-com.crai.referencistas.com/";
     private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(10);
     private static final String SEARCH_KEY = "computational thinking";
-    private static final String directorioActual = System.getProperty("user.dir");
     private static final String PDF_FOLDER_PATH = directorioActual+ "/src/main/resources/co.uniquindio.proyecto.backendalgoritmos/";
 
     public static void ejectue() {
