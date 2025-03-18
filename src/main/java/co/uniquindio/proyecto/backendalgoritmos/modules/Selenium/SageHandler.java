@@ -18,7 +18,8 @@ import java.util.Random;
 public class SageHandler {
 
     private static final String directorioActual = System.getProperty("user.dir");
-    private static final String CHROME_DRIVER_PATH = directorioActual +  "/src/main/resources/drivers/chromedriver-mac-x64/chromedriver";
+    private static final String CHROME_DRIVER_PATH = directorioActual + "/src/main/resources/drivers/chromedriver-win64/chromedriver.exe";
+    private static final String CHROME_DRIVER_PATH_MAC = "/src/main/resources/drivers/chromedriver-mac-x64/chromedriver";
     private static final String BASE_URL = "https://login.crai.referencistas.com/login?url=https://journals.sagepub.com";
     private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(10);
     private static final String SEARCH_KEY = "computational thinking";

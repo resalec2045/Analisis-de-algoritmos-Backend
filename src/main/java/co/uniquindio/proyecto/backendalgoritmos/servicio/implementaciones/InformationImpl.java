@@ -1,6 +1,6 @@
 package co.uniquindio.proyecto.backendalgoritmos.servicio.implementaciones;
 
-import co.uniquindio.proyecto.backendalgoritmos.models.AuthorSortingResults;
+import co.uniquindio.proyecto.backendalgoritmos.models.ModelSortingResults;
 import co.uniquindio.proyecto.backendalgoritmos.models.DocumentsProperties;
 import co.uniquindio.proyecto.backendalgoritmos.models.SortingResult;
 import co.uniquindio.proyecto.backendalgoritmos.modules.OrderingMethods.SortingAlgorithms;
@@ -30,14 +30,14 @@ public class InformationImpl implements InformationServicio {
         modelFront.add(getAuthorSortingResults(allSortedKeywords));
         modelFront.add(getTitleSortingResults(allSortedKeywords));
         modelFront.add(getLocationSortingResults(allSortedKeywords));
-        modelFront.add(getDescriptionSortingResults(allSortedKeywords));
+        modelFront.add(getYearSortingResults(allSortedKeywords));
 
         // Devolver el objeto con la lista estructurada bajo el autor
         return modelFront;
 
     }
 
-    private AuthorSortingResults getAuthorSortingResults(List<DocumentsProperties> allSortedKeywords) {
+    private ModelSortingResults getAuthorSortingResults(List<DocumentsProperties> allSortedKeywords) {
         List<String> list = new ArrayList<>();
 
         for (DocumentsProperties doc : allSortedKeywords) {
@@ -68,11 +68,11 @@ public class InformationImpl implements InformationServicio {
         results.add(new SortingResult("BitonicSort", SortingAlgorithms.bitonicSort(new ArrayList<>(sortableList))));
         results.add(new SortingResult("RadixSort", SortingAlgorithms.radixSort(new ArrayList<>(sortableList))));
 
-        return new AuthorSortingResults(author, results);
+        return new ModelSortingResults(author, results);
 
     }
 
-    private AuthorSortingResults getTitleSortingResults(List<DocumentsProperties> allSortedKeywords) {
+    private ModelSortingResults getTitleSortingResults(List<DocumentsProperties> allSortedKeywords) {
         List<String> list = new ArrayList<>();
 
         for (DocumentsProperties doc : allSortedKeywords) {
@@ -103,11 +103,11 @@ public class InformationImpl implements InformationServicio {
         results.add(new SortingResult("BitonicSort", SortingAlgorithms.bitonicSort(new ArrayList<>(sortableList))));
         results.add(new SortingResult("RadixSort", SortingAlgorithms.radixSort(new ArrayList<>(sortableList))));
 
-        return new AuthorSortingResults(author, results);
+        return new ModelSortingResults(author, results);
 
     }
 
-    private AuthorSortingResults getLocationSortingResults(List<DocumentsProperties> allSortedKeywords) {
+    private ModelSortingResults getLocationSortingResults(List<DocumentsProperties> allSortedKeywords) {
         List<String> list = new ArrayList<>();
 
         for (DocumentsProperties doc : allSortedKeywords) {
@@ -138,22 +138,22 @@ public class InformationImpl implements InformationServicio {
         results.add(new SortingResult("BitonicSort", SortingAlgorithms.bitonicSort(new ArrayList<>(sortableList))));
         results.add(new SortingResult("RadixSort", SortingAlgorithms.radixSort(new ArrayList<>(sortableList))));
 
-        return new AuthorSortingResults(author, results);
+        return new ModelSortingResults(author, results);
 
     }
 
-    private AuthorSortingResults getDescriptionSortingResults(List<DocumentsProperties> allSortedKeywords) {
+    private ModelSortingResults getYearSortingResults(List<DocumentsProperties> allSortedKeywords) {
         List<String> list = new ArrayList<>();
 
         for (DocumentsProperties doc : allSortedKeywords) {
-            String keywords = doc.getAbstractDescription();
+            String keywords = doc.getYear() + "";
             if (keywords != null) {
                 list.add(keywords);
             }
         }
 
         // Obtener el nombre del autor (tomando el primero de la lista si existe)
-        String author = "Abstract Description";
+        String author = "Año";
 
         // Copia de la lista original para evitar modificarla en cada ordenamiento
         List<List<String>> sortableList = Collections.singletonList(new ArrayList<>(list));
@@ -173,7 +173,7 @@ public class InformationImpl implements InformationServicio {
         results.add(new SortingResult("BitonicSort", SortingAlgorithms.bitonicSort(new ArrayList<>(sortableList))));
         results.add(new SortingResult("RadixSort", SortingAlgorithms.radixSort(new ArrayList<>(sortableList))));
 
-        return new AuthorSortingResults(author, results);
+        return new ModelSortingResults(author, results);
 
     }
 

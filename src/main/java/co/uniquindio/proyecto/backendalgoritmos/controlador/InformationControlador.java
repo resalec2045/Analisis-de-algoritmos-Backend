@@ -1,7 +1,6 @@
 package co.uniquindio.proyecto.backendalgoritmos.controlador;
 
 import co.uniquindio.proyecto.backendalgoritmos.dto.MensajeDTO;
-import co.uniquindio.proyecto.backendalgoritmos.models.AuthorSortingResults;
 import co.uniquindio.proyecto.backendalgoritmos.servicio.interfaces.InformationServicio;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
