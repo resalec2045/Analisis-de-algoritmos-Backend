@@ -17,7 +17,7 @@ public class ACMHandler {
 
     private static final String directorioActual = System.getProperty("user.dir");
     private static final String CHROME_DRIVER_PATH = directorioActual + "/src/main/resources/drivers/chromedriver-win64/chromedriver.exe";
-    private static final String CHROME_DRIVER_PATH_MAC = "/src/main/resources/drivers/chromedriver-mac-x64/chromedriver";
+    private static final String CHROME_DRIVER_PATH_MAC = directorioActual+ "/src/main/resources/drivers/chromedriver-mac-x64/chromedriver";
     private static final String BASE_URL = "https://library.uniquindio.edu.co/databases";
     private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(10);
     private static final String SEARCH_KEY = "computational thinking";
@@ -46,7 +46,7 @@ public class ACMHandler {
             put("download.directory_upgrade", true);
             put("safebrowsing.enabled", true);
         }});
-        System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATH);
+        System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATH_MAC);
         driver = new ChromeDriver(options);
         driver.get(BASE_URL);
         wait = new WebDriverWait(driver, DEFAULT_TIMEOUT);
@@ -92,7 +92,7 @@ public class ACMHandler {
     }
 
     private void dowloandDocuments() throws InterruptedException {
-        for (int pagina = 1; pagina <= 50; pagina++) {
+        for (int pagina = 1; pagina <= 60; pagina++) {
             try {
 
                 WebElement checkbox = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='item-results__checkbox']/label[@class='checkbox--primary']/input[@type='checkbox' and @name='markall']")));

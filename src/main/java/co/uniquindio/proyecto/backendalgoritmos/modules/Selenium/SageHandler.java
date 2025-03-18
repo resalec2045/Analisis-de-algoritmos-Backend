@@ -1,4 +1,5 @@
 package co.uniquindio.proyecto.backendalgoritmos.modules.Selenium;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -18,23 +19,20 @@ import java.util.Random;
 public class SageHandler {
 
     private static final String directorioActual = System.getProperty("user.dir");
-    private static final String CHROME_DRIVER_PATH = directorioActual + "/src/main/resources/drivers/chromedriver-win64/chromedriver.exe";
-    private static final String CHROME_DRIVER_PATH_MAC = "/src/main/resources/drivers/chromedriver-mac-x64/chromedriver";
+    private static final String CHROME_DRIVER_PATH_MAC = directorioActual + "/src/main/resources/drivers/chromedriver-mac-x64/chromedriver";
     private static final String BASE_URL = "https://login.crai.referencistas.com/login?url=https://journals.sagepub.com";
-    private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(10);
+    private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(20);
     private static final String SEARCH_KEY = "computational thinking";
-    private static final String BIB_FOLDER_PATH = directorioActual+ "/src/main/resources/co.uniquindio.proyecto.backendalgoritmos/";
+    private static final String BIB_FOLDER_PATH = directorioActual + "/src/main/resources/co.uniquindio.proyecto.backendalgoritmos/";
 
     public static void ejectue() {
-        String downloadPath = BIB_FOLDER_PATH; // Replace with your desired download path
+        String downloadPath = BIB_FOLDER_PATH;
 
-        // Create the download directory if it doesn't exist
         File downloadDir = new File(downloadPath);
         if (!downloadDir.exists()) {
             downloadDir.mkdirs();
         }
 
-        // Configure Chrome options for automatic downloads and anti-detection
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-blink-features=AutomationControlled");
         options.addArguments("--start-maximized");
@@ -50,57 +48,45 @@ public class SageHandler {
             put("safebrowsing.enabled", true);
         }});
 
-        // Initialize WebDriver
-
-        System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATH);
+        System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATH_MAC);
 
         ChromeDriverService service = ChromeDriverService.createDefaultService();
         WebDriver driver = new ChromeDriver(service, options);
+        WebDriverWait wait = new WebDriverWait(driver, DEFAULT_TIMEOUT);
 
         try {
-            // Access ScienceDirect
             driver.get(BASE_URL);
 
-            // Wait for and click the Google login button
-            WebDriverWait wait = new WebDriverWait(driver, DEFAULT_TIMEOUT);
             WebElement googleButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("btn-google")));
             googleButton.click();
             System.out.println("Clicked Google login button.");
 
-            // Enter email
             WebElement username = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("identifierId")));
-            escribirComoHumano(driver, username, "mariana.valenciae1@uqvirtual.edu.co"); // Replace with your email
+            escribirComoHumano(driver, username, "mariana.valenciae1@uqvirtual.edu.co");
             username.sendKeys(Keys.RETURN);
             Thread.sleep(3000);
 
-            // Enter password
             WebElement passwordField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("Passwd")));
-            escribirComoHumano(driver, passwordField, "Lindaraja11,."); // Replace with your password
+            escribirComoHumano(driver, passwordField, "Lindaraja11,.");
             passwordField.sendKeys(Keys.RETURN);
             Thread.sleep(10000);
-
-            // Perform search
 
             WebElement searchInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@type='search']")));
             wait.until(ExpectedConditions.invisibilityOfElementLocated(By.className("onload-background")));
             searchInput.sendKeys(SEARCH_KEY);
-            wait = new WebDriverWait(driver, DEFAULT_TIMEOUT);
             WebElement searchButton = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("button[data-id='global-homepage-quick-search']")));
             searchButton.click();
             System.out.println("Clicked search button");
 
-            Thread.sleep(2000); // Es
-            // Iterate through pages
+            Thread.sleep(2000);
 
-            for (int pagina = 1; pagina <= 50; pagina++) {
+            for (int pagina = 1; pagina <= 60; pagina++) {
                 try {
-                    // Show 100 results per page
                     WebElement allSelector = wait.until(ExpectedConditions.elementToBeClickable(By.id("action-bar-select-all")));
                     allSelector.click();
                     Thread.sleep(2000);
 
                     WebElement exportCitationsButton = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("a[data-id='srp-export-citations']")));
-                    // Hacer clic en el botón
                     exportCitationsButton.click();
                     Thread.sleep(2000);
 
@@ -109,18 +95,16 @@ public class SageHandler {
                     Thread.sleep(2000);
 
                     Select select = new Select(selectElement);
-
                     select.selectByValue("bibtex");
+                    Thread.sleep(2000);
 
+                    // Usar JavascriptExecutor para forzar el clic
                     WebElement downloadButton = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("a.btn.btn-secondary.download__btn")));
-                    // Hacer clic en el botón de descarga
-                    downloadButton.click();
+                    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", downloadButton);
                     System.out.println("Download button clicked successfully.");
                     Thread.sleep(2000);
 
-                    // Esperar a que el modal esté visible
                     wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.modal__content")));
-                    // Esperar a que el botón de cierre esté presente y sea clickable
                     WebElement closeButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[contains(@alt,'close')]")));
                     closeButton.click();
                     System.out.println("Close button clicked successfully.");
@@ -136,9 +120,7 @@ public class SageHandler {
                     System.out.println("⚠ Error on page " + pagina + ": " + e.getMessage());
                 }
             }
-
-            System.out.println("Download completed up to page 38.");
-
+            System.out.println("Download completed up to page 60.");
         } catch (Exception e) {
             System.out.println("General error: " + e.getMessage());
         } finally {
