@@ -56,12 +56,8 @@ public class DocumentsExtractor { // Definición de la clase DocumentsExtractor
         article.setTitle(extractAttribute(articleContent, "title")); // Extrae el título del artículo
         article.setYear(extractYear(articleContent)); // Extrae el año del artículo
         article.setLocation(extractAttribute(articleContent, "location")); // Extrae la ubicación del artículo
+        article.setNumpages(extractPages(articleContent)); // Extrae
         article.setAbstractDescription(extractAttribute(articleContent, "abstract")); // Extrae el resumen del artículo
-
-//        if (article.getTitle() == null) { // Comentado: Si el artículo no tiene título, no se procesaría
-//            return null;
-//        }
-
         return article; // Devuelve el artículo con las propiedades extraídas
     }
 
@@ -81,6 +77,18 @@ public class DocumentsExtractor { // Definición de la clase DocumentsExtractor
         if (yearString != null) { // Si se obtuvo un valor para el año
             try {
                 return Integer.parseInt(yearString); // Intenta convertir el valor a un número entero
+            } catch (NumberFormatException e) { // Si ocurre un error al convertir, captura la excepción
+                return 0; // Si no se puede convertir, devuelve 0 como valor predeterminado
+            }
+        }
+        return 0; // Si no se obtuvo un año, devuelve 0
+    }
+
+    private static int extractPages(String articleContent) { // Método privado para extraer el año de publicación del artículo
+        String pages = extractAttribute(articleContent, "numpages"); // Llama a extractAttribute para obtener el valor del año
+        if (pages != null) { // Si se obtuvo un valor para el año
+            try {
+                return Integer.parseInt(pages); // Intenta convertir el valor a un número entero
             } catch (NumberFormatException e) { // Si ocurre un error al convertir, captura la excepción
                 return 0; // Si no se puede convertir, devuelve 0 como valor predeterminado
             }

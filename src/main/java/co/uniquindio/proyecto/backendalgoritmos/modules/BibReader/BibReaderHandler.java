@@ -92,8 +92,10 @@ public class BibReaderHandler {
         // Extrae el valor del año de la entrada.
         String anio = extraerValor(entrada, "year = \\{(.*?)\\}");
 
+        String pages = extraerValor(entrada, "pages = \\{(.*?)\\}");
+
         // Combina los valores de autor, título y año para crear la clave única.
-        return autor + titulo + anio; // Combinación de campos clave para la comparación
+        return autor + titulo + anio + pages; // Combinación de campos clave para la comparación
     }
 
     // Extrae la información del artículo en un formato específico.
@@ -104,11 +106,12 @@ public class BibReaderHandler {
         String titulo = extraerValor(entrada, "title = \\{(.*?)\\}");
         // Extrae el valor del año de la entrada.
         String anio = extraerValor(entrada, "year = \\{(.*?)\\}");
+        String pages = extraerValor(entrada, "numpages = \\{(.*?)\\}");
         // Extrae el valor del resumen de la entrada.
         String resumen = extraerValor(entrada, "abstract = \\{(.*?)\\}");
 
         // Formatea la información del artículo en una cadena.
-        return String.format("@article{\n  author = {%s},\n  title = {%s},\n  year = {%s},\n  abstract = {%s}\n}\n\n", autor, titulo, anio, resumen);
+        return String.format("@article{\n  author = {%s},\n  title = {%s},\n  year = {%s},\n  numpages = {%s},\n  abstract = {%s}\n}\n\n", autor, titulo, anio, pages, resumen);
     }
 
     // Extrae un valor de una entrada de artículo utilizando una expresión regular.

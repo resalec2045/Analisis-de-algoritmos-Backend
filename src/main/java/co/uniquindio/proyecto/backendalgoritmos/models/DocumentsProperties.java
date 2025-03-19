@@ -9,16 +9,18 @@ public class DocumentsProperties {
     private int year;
     private String location;
     private String abstractDescription;
+    private int numpages;
 
     public DocumentsProperties() {
     }
 
-    public DocumentsProperties(String author, String title, int year, String location, String abstractDescription) {
+    public DocumentsProperties(String author, String title, int year, String location, String abstractDescription, int numpages) {
         this.author = author;
         this.title = title;
         this.year = year;
         this.location = location;
         this.abstractDescription = abstractDescription;
+        this.numpages = numpages;
     }
 
     public String getAuthor() {
@@ -61,6 +63,14 @@ public class DocumentsProperties {
         this.abstractDescription = abstractDescription;
     }
 
+    public int getNumpages() {
+        return numpages;
+    }
+
+    public void setNumpages(int numpages) {
+        this.numpages = numpages;
+    }
+
     @Override
     public String toString() {
         return "DocumentsProperties{" +
@@ -69,6 +79,7 @@ public class DocumentsProperties {
                 ", year=" + year +
                 ", location='" + location + '\'' +
                 ", abstractDescription='" + abstractDescription + '\'' +
+                ", numpages=" + numpages +
                 '}';
     }
 
@@ -76,11 +87,11 @@ public class DocumentsProperties {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         DocumentsProperties that = (DocumentsProperties) o;
-        return year == that.year && Objects.equals(author, that.author) && Objects.equals(title, that.title) && Objects.equals(location, that.location) && Objects.equals(abstractDescription, that.abstractDescription);
+        return year == that.year && numpages == that.numpages && Objects.equals(author, that.author) && Objects.equals(title, that.title) && Objects.equals(location, that.location) && Objects.equals(abstractDescription, that.abstractDescription);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(author, title, year, location, abstractDescription);
+        return Objects.hash(author, title, year, location, abstractDescription, numpages);
     }
 }
