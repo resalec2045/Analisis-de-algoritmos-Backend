@@ -32,8 +32,8 @@ public class BibReaderHandler {
             return;
         }
 
-        // Crea un conjunto para almacenar las claves únicas de los artículos.
-        Set<String> entradasUnicas = new HashSet<>();
+        // Crea un conjunto para almacenar los títulos únicos de los artículos.
+        Set<String> titulosUnicos = new HashSet<>();
         // Crea una lista para almacenar los artículos duplicados.
         List<String> entradasDuplicadas = new ArrayList<>();
         // Crea un StringBuilder para construir el contenido del archivo de salida de artículos generales.
@@ -55,16 +55,16 @@ public class BibReaderHandler {
                     if (linea.equals("}")) { // Fin de una entrada
                         // Convierte la entrada actual a una cadena.
                         String entradaStr = entradaActual.toString();
-                        // Genera una clave única para la entrada actual.
-                        String claveUnica = generarClaveUnica(entradaStr); // Generar clave para la comparación
+                        // Extrae el título del artículo de la entrada.
+                        String titulo = extraerValor(entradaStr, "title = \\{(.*?)\\}");
 
-                        // Verifica si la clave única ya existe en el conjunto de entradas únicas.
-                        if (!entradasUnicas.add(claveUnica)) {
-                            // Si la clave ya existe, agrega la entrada a la lista de duplicados.
+                        // Verifica si el título ya existe en el conjunto de títulos únicos.
+                        if (!titulosUnicos.add(titulo)) {
+                            // Si el título ya existe, agrega la entrada a la lista de duplicados.
                             entradasDuplicadas.add(entradaStr);
                         } else {
-                            // Si la clave es única, extrae la información del artículo y la agrega al StringBuilder de artículos generales.
-                            articulosGenerales.append(extraerInfoArticulo(entradaStr));
+                            // Si el título es único, extrae la información del artículo y la agrega al StringBuilder de artículos generales.
+                            articulosGenerales.append(entradaStr).append("\n");
                         }
 
                         // Reinicia el StringBuilder para la siguiente entrada.
@@ -81,37 +81,6 @@ public class BibReaderHandler {
         guardarArchivo(articulosGenerales.toString(), archivoSalida);
         // Guarda el contenido de artículos duplicados en el archivo de duplicados.
         guardarArchivo(String.join("\n", entradasDuplicadas), archivoDuplicados);
-    }
-
-    // Genera una clave única para una entrada de artículo basada en el autor, título y año.
-    private static String generarClaveUnica(String entrada) {
-        // Extrae el valor del autor de la entrada.
-        String autor = extraerValor(entrada, "author = \\{(.*?)\\}");
-        // Extrae el valor del título de la entrada.
-        String titulo = extraerValor(entrada, "title = \\{(.*?)\\}");
-        // Extrae el valor del año de la entrada.
-        String anio = extraerValor(entrada, "year = \\{(.*?)\\}");
-
-        String pages = extraerValor(entrada, "pages = \\{(.*?)\\}");
-
-        // Combina los valores de autor, título y año para crear la clave única.
-        return autor + titulo + anio + pages; // Combinación de campos clave para la comparación
-    }
-
-    // Extrae la información del artículo en un formato específico.
-    private static String extraerInfoArticulo(String entrada) {
-        // Extrae el valor del autor de la entrada.
-        String autor = extraerValor(entrada, "author = \\{(.*?)\\}");
-        // Extrae el valor del título de la entrada.
-        String titulo = extraerValor(entrada, "title = \\{(.*?)\\}");
-        // Extrae el valor del año de la entrada.
-        String anio = extraerValor(entrada, "year = \\{(.*?)\\}");
-        String pages = extraerValor(entrada, "numpages = \\{(.*?)\\}");
-        // Extrae el valor del resumen de la entrada.
-        String resumen = extraerValor(entrada, "abstract = \\{(.*?)\\}");
-
-        // Formatea la información del artículo en una cadena.
-        return String.format("@article{\n  author = {%s},\n  title = {%s},\n  year = {%s},\n  numpages = {%s},\n  abstract = {%s}\n}\n\n", autor, titulo, anio, pages, resumen);
     }
 
     // Extrae un valor de una entrada de artículo utilizando una expresión regular.

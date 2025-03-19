@@ -4,8 +4,7 @@ import co.uniquindio.proyecto.backendalgoritmos.models.ModelSortingResults;
 import co.uniquindio.proyecto.backendalgoritmos.models.DocumentsProperties;
 import co.uniquindio.proyecto.backendalgoritmos.models.SortingResult;
 import co.uniquindio.proyecto.backendalgoritmos.modules.OrderingMethods.SortingAlgorithms;
-import co.uniquindio.proyecto.backendalgoritmos.modules.PDFReader.DocumentsExtractor;
-import co.uniquindio.proyecto.backendalgoritmos.modules.PDFReader.PDFReader;
+import co.uniquindio.proyecto.backendalgoritmos.modules.DocuemntsExtractor.DocumentsExtractor;
 import co.uniquindio.proyecto.backendalgoritmos.servicio.interfaces.InformationServicio;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +22,6 @@ public class InformationImpl implements InformationServicio {
         String directorioActual = System.getProperty("user.dir");
         String bibFilePath = directorioActual + "/src/main/resources/co.uniquindio.proyecto.backendalgoritmos/keywords.bib";
 
-        PDFReader pdfReadernew = new PDFReader();
-        pdfReadernew.ejecute();
         List<DocumentsProperties> allSortedKeywords = DocumentsExtractor.readBibFile(bibFilePath);
 
         modelFront.add(getAuthorSortingResults(allSortedKeywords));

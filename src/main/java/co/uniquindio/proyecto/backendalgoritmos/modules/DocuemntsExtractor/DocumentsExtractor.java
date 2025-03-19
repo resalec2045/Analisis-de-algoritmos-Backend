@@ -1,4 +1,4 @@
-package co.uniquindio.proyecto.backendalgoritmos.modules.PDFReader; // Declaración del paquete donde se encuentra la clase DocumentsExtractor
+package co.uniquindio.proyecto.backendalgoritmos.modules.DocuemntsExtractor; // Declaración del paquete donde se encuentra la clase DocumentsExtractor
 
 import co.uniquindio.proyecto.backendalgoritmos.models.DocumentsProperties; // Importa la clase DocumentsProperties, que se usa para almacenar los datos extraídos
 
