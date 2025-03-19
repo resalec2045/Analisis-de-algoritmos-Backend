@@ -26,31 +26,33 @@ public class ACMHandler {
     private WebDriver driver;
     private WebDriverWait wait;
 
-    public ACMHandler() {
-        File downloadDir = new File(BIB_FOLDER_PATH);
-        if (!downloadDir.exists()) {
-            downloadDir.mkdirs();
+    public ACMHandler() { // Constructor de la clase ACMHandler
+        File downloadDir = new File(BIB_FOLDER_PATH); // Crea un objeto File con la ruta del directorio de descargas especificada por la constante BIB_FOLDER_PATH
+        if (!downloadDir.exists()) { // Verifica si el directorio no existe
+            downloadDir.mkdirs(); // Si no existe, crea el directorio
         }
 
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--disable-blink-features=AutomationControlled");
-        options.addArguments("--start-maximized");
-        options.addArguments("--disable-popup-blocking");
-        options.addArguments("--disable-infobars");
-        options.addArguments("--no-sandbox");
-        options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
-        options.setExperimentalOption("useAutomationExtension", false);
-        options.setExperimentalOption("prefs", new java.util.HashMap<String, Object>() {{
-            put("download.default_directory", BIB_FOLDER_PATH);
-            put("download.prompt_for_download", false);
-            put("download.directory_upgrade", true);
-            put("safebrowsing.enabled", true);
+        ChromeOptions options = new ChromeOptions(); // Crea un objeto ChromeOptions para configurar opciones personalizadas para el navegador Chrome
+        options.addArguments("--disable-blink-features=AutomationControlled"); // Desactiva la característica "AutomationControlled" que indica que el navegador es automatizado
+        options.addArguments("--start-maximized"); // Inicia el navegador maximizado
+        options.addArguments("--disable-popup-blocking"); // Desactiva el bloqueo de ventanas emergentes
+        options.addArguments("--disable-infobars"); // Desactiva las barras informativas del navegador (como la barra de "Chrome está controlado por software de automatización")
+        options.addArguments("--no-sandbox"); // Desactiva el modo "sandbox", que está relacionado con las restricciones de seguridad del navegador
+        options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"}); // Establece una opción experimental para excluir el interruptor "enable-automation" que indica que el navegador está automatizado
+        options.setExperimentalOption("useAutomationExtension", false); // Desactiva la extensión de automatización en Chrome
+        options.setExperimentalOption("prefs", new java.util.HashMap<String, Object>() {{ // Establece preferencias personalizadas para el navegador en un mapa de opciones
+            put("download.default_directory", BIB_FOLDER_PATH); // Especifica la ruta donde se guardarán los archivos descargados
+            put("download.prompt_for_download", false); // Desactiva el cuadro de diálogo que pide confirmación antes de descargar archivos
+            put("download.directory_upgrade", true); // Permite la actualización del directorio de descarga si ya existe
+            put("safebrowsing.enabled", true); // Habilita la protección contra la navegación no segura
         }});
-        System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATH_MAC);
-        driver = new ChromeDriver(options);
-        driver.get(BASE_URL);
-        wait = new WebDriverWait(driver, DEFAULT_TIMEOUT);
-    }
+
+        System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATH_MAC); // Establece la propiedad del sistema para el controlador de Chrome, usando la constante CHROME_DRIVER_PATH_MAC para especificar la ruta del controlador
+        driver = new ChromeDriver(options); // Crea una nueva instancia del controlador ChromeDriver con las opciones configuradas previamente
+        driver.get(BASE_URL); // Abre la URL base especificada por la constante BASE_URL en el navegador
+        wait = new WebDriverWait(driver, DEFAULT_TIMEOUT); // Crea una instancia de WebDriverWait para esperar elementos con un tiempo de espera predeterminado especificado por DEFAULT_TIMEOUT
+    } // Fin del constructor
+
 
     public void ejecute() {
         try {

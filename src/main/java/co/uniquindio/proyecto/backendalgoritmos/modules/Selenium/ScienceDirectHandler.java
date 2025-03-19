@@ -24,37 +24,36 @@ public class ScienceDirectHandler {
     private static final String SEARCH_KEY = "computational thinking";
     private static final String PDF_FOLDER_PATH = directorioActual+ "/src/main/resources/co.uniquindio.proyecto.backendalgoritmos/";
 
-    public static void ejectue() {
-        String downloadPath = PDF_FOLDER_PATH; // Replace with your desired download path
+    public static void ejectue() { // Define el método estático "ejectue", que puede ser llamado sin necesidad de instanciar la clase.
+        String downloadPath = PDF_FOLDER_PATH; // Asigna la ruta del directorio de descarga desde la constante PDF_FOLDER_PATH. Asegúrate de que esta constante esté definida previamente.
 
-        // Create the download directory if it doesn't exist
-        File downloadDir = new File(downloadPath);
-        if (!downloadDir.exists()) {
-            downloadDir.mkdirs();
+        // Crear el directorio de descargas si no existe
+        File downloadDir = new File(downloadPath); // Crea un objeto File con la ruta del directorio de descarga.
+        if (!downloadDir.exists()) { // Verifica si el directorio no existe.
+            downloadDir.mkdirs(); // Si no existe, lo crea.
         }
 
-        // Configure Chrome options for automatic downloads and anti-detection
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--disable-blink-features=AutomationControlled");
-        options.addArguments("--start-maximized");
-        options.addArguments("--disable-popup-blocking");
-        options.addArguments("--disable-infobars");
-        options.addArguments("--no-sandbox");
-        options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
-        options.setExperimentalOption("useAutomationExtension", false);
-        options.setExperimentalOption("prefs", new java.util.HashMap<String, Object>() {{
-            put("download.default_directory", downloadPath);
-            put("download.prompt_for_download", false);
-            put("download.directory_upgrade", true);
-            put("safebrowsing.enabled", true);
+        // Configura las opciones de Chrome para las descargas automáticas y evitar la detección
+        ChromeOptions options = new ChromeOptions(); // Crea una instancia de ChromeOptions para personalizar la configuración del navegador Chrome.
+        options.addArguments("--disable-blink-features=AutomationControlled"); // Desactiva la característica "AutomationControlled" que puede indicar que el navegador es automatizado.
+        options.addArguments("--start-maximized"); // Inicia el navegador con la ventana maximizada.
+        options.addArguments("--disable-popup-blocking"); // Desactiva el bloqueo de ventanas emergentes.
+        options.addArguments("--disable-infobars"); // Desactiva la barra de información que muestra que Chrome está controlado por un software de automatización.
+        options.addArguments("--no-sandbox"); // Desactiva el modo sandbox de Chrome, relacionado con la seguridad.
+        options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"}); // Excluye el interruptor "enable-automation", que es una señal de que el navegador está siendo automatizado.
+        options.setExperimentalOption("useAutomationExtension", false); // Desactiva la extensión de automatización de Chrome, para evitar la detección.
+        options.setExperimentalOption("prefs", new java.util.HashMap<String, Object>() {{ // Establece preferencias personalizadas en Chrome mediante un mapa de opciones.
+            put("download.default_directory", downloadPath); // Define el directorio de descarga predeterminado donde se guardarán los archivos descargados.
+            put("download.prompt_for_download", false); // Desactiva la solicitud de confirmación antes de iniciar la descarga de archivos.
+            put("download.directory_upgrade", true); // Permite actualizar el directorio de descarga si ya existe.
+            put("safebrowsing.enabled", true); // Habilita la protección contra la navegación insegura.
         }});
 
-        // Initialize WebDriver
+        // Inicializa WebDriver
+        System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATH_MAC); // Establece la propiedad del sistema para el controlador de Chrome, especificando la ruta al archivo del controlador en CHROME_DRIVER_PATH_MAC.
 
-        System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATH_MAC);
-
-        ChromeDriverService service = ChromeDriverService.createDefaultService();
-        WebDriver driver = new ChromeDriver(service, options);
+        ChromeDriverService service = ChromeDriverService.createDefaultService(); // Crea un servicio predeterminado para el controlador ChromeDriver.
+        WebDriver driver = new ChromeDriver(service, options); // Inicializa el WebDriver con el servicio y las opciones configuradas previamente. Se utiliza para controlar el navegador Chrome.
 
         try {
             // Access ScienceDirect
