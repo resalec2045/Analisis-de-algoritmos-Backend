@@ -1,8 +1,8 @@
 package co.uniquindio.proyecto.backendalgoritmos.modules.BibReader;
+
 import java.io.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.*;
+import java.util.regex.*;
 
 public class BibReaderHandler {
 
@@ -46,25 +46,30 @@ public class BibReaderHandler {
                 String linea;
                 // Crea un StringBuilder para construir la entrada actual del artículo.
                 StringBuilder entradaActual = new StringBuilder();
+                String tituloArticulo = null; // Variable para almacenar el título del artículo
 
                 // Lee cada línea del archivo.
                 while ((linea = br.readLine()) != null) {
                     // Agrega la línea a la entrada actual.
                     entradaActual.append(linea).append("\n");
+
+                    // Si la línea contiene la palabra "title", extrae el título del artículo.
+                    if (linea.toLowerCase().startsWith("title")) {
+                        tituloArticulo = extraerValor(entradaActual.toString(), "title = \\{(.*?)\\}");
+                    }
+
                     // Verifica si la línea es el cierre de una entrada de artículo (}).
                     if (linea.equals("}")) { // Fin de una entrada
-                        // Convierte la entrada actual a una cadena.
-                        String entradaStr = entradaActual.toString();
-                        // Extrae el título del artículo de la entrada.
-                        String titulo = extraerValor(entradaStr, "title = \\{(.*?)\\}");
-
-                        // Verifica si el título ya existe en el conjunto de títulos únicos.
-                        if (!titulosUnicos.add(titulo)) {
-                            // Si el título ya existe, agrega la entrada a la lista de duplicados.
-                            entradasDuplicadas.add(entradaStr);
-                        } else {
-                            // Si el título es único, extrae la información del artículo y la agrega al StringBuilder de artículos generales.
-                            articulosGenerales.append(entradaStr).append("\n");
+                        // Si se encontró un título
+                        if (tituloArticulo != null) {
+                            // Verifica si el título ya está en el conjunto de títulos únicos.
+                            if (!titulosUnicos.add(tituloArticulo)) {
+                                // Si el título ya existe, agrega el artículo a la lista de duplicados.
+                                entradasDuplicadas.add(entradaActual.toString());
+                            } else {
+                                // Si el título es único, agrégalo al archivo de artículos generales.
+                                articulosGenerales.append(entradaActual.toString()).append("\n");
+                            }
                         }
 
                         // Reinicia el StringBuilder para la siguiente entrada.
