@@ -25,7 +25,7 @@ public class InformationImpl implements InformationServicio {
 
         modelFront.add(getAuthorSortingResults(articles));
         modelFront.add(getTitleSortingResults(articles));
-        modelFront.add(getLocationSortingResults(articles));
+        modelFront.add(getNumberPagesSortingResults(articles));
         modelFront.add(getYearSortingResults(articles));
 
         // Devolver el objeto con la lista estructurada bajo el autor
@@ -97,18 +97,18 @@ public class InformationImpl implements InformationServicio {
 
     }
 
-    private ModelSortingResults getLocationSortingResults(List<DocumentsProperties> articles) {
+    private ModelSortingResults getYearSortingResults(List<DocumentsProperties> articles) {
         List<String> list = new ArrayList<>();
 
         for (DocumentsProperties doc : articles) {
-            String keywords = doc.getLocation();
+            String keywords = doc.getYear() + "";
             if (keywords != null) {
                 list.add(keywords);
             }
         }
 
         // Obtener el nombre del autor (tomando el primero de la lista si existe)
-        String author = "Localización";
+        String author = "Año";
 
         // Lista de resultados de los algoritmos
         List<SortingResult> results = new ArrayList<>();
@@ -129,18 +129,18 @@ public class InformationImpl implements InformationServicio {
 
     }
 
-    private ModelSortingResults getYearSortingResults(List<DocumentsProperties> articles) {
+    private ModelSortingResults getNumberPagesSortingResults(List<DocumentsProperties> articles) {
         List<String> list = new ArrayList<>();
 
         for (DocumentsProperties doc : articles) {
-            String keywords = doc.getYear() + "";
+            String keywords = doc.getNumpages() + "";
             if (keywords != null) {
                 list.add(keywords);
             }
         }
 
         // Obtener el nombre del autor (tomando el primero de la lista si existe)
-        String author = "Año";
+        String author = "Número de páginas";
 
         // Lista de resultados de los algoritmos
         List<SortingResult> results = new ArrayList<>();
