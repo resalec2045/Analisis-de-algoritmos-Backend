@@ -32,8 +32,8 @@ public class BibReaderHandler {
             return;
         }
 
-        // Crea un conjunto para almacenar los títulos únicos de los artículos.
-        Set<String> titulosUnicos = new HashSet<>();
+        // Crea un conjunto para almacenar las entradas completas únicas de los artículos.
+        Set<String> entradasUnicas = new HashSet<>();
         // Crea una lista para almacenar los artículos duplicados.
         List<String> entradasDuplicadas = new ArrayList<>();
         // Crea un StringBuilder para construir el contenido del archivo de salida de artículos generales.
@@ -53,23 +53,18 @@ public class BibReaderHandler {
                     // Agrega la línea a la entrada actual.
                     entradaActual.append(linea).append("\n");
 
-                    // Si la línea contiene la palabra "title", extrae el título del artículo.
-                    if (linea.toLowerCase().startsWith("title")) {
-                        tituloArticulo = extraerValor(entradaActual.toString(), "title = \\{(.*?)\\}");
-                    }
-
                     // Verifica si la línea es el cierre de una entrada de artículo (}).
                     if (linea.equals("}")) { // Fin de una entrada
-                        // Si se encontró un título
-                        if (tituloArticulo != null) {
-                            // Verifica si el título ya está en el conjunto de títulos únicos.
-                            if (!titulosUnicos.add(tituloArticulo)) {
-                                // Si el título ya existe, agrega el artículo a la lista de duplicados.
-                                entradasDuplicadas.add(entradaActual.toString());
-                            } else {
-                                // Si el título es único, agrégalo al archivo de artículos generales.
-                                articulosGenerales.append(entradaActual.toString()).append("\n");
-                            }
+                        // Si se encontró una entrada completa, verifica si ya está registrada
+                        String entradaCompleta = entradaActual.toString().trim();
+
+                        // Si la entrada ya existe, es un duplicado.
+                        if (!entradasUnicas.add(entradaCompleta)) {
+                            // Si el artículo es un duplicado, lo agregamos a la lista de duplicados.
+                            entradasDuplicadas.add(entradaCompleta);
+                        } else {
+                            // Si la entrada es única, agregamos el artículo a la lista de artículos generales.
+                            articulosGenerales.append(entradaCompleta).append("\n");
                         }
 
                         // Reinicia el StringBuilder para la siguiente entrada.
@@ -85,22 +80,7 @@ public class BibReaderHandler {
         // Guarda el contenido de artículos generales en el archivo de salida.
         guardarArchivo(articulosGenerales.toString(), archivoSalida);
         // Guarda el contenido de artículos duplicados en el archivo de duplicados.
-        guardarArchivo(String.join("\n", entradasDuplicadas), archivoDuplicados);
-    }
-
-    // Extrae un valor de una entrada de artículo utilizando una expresión regular.
-    private static String extraerValor(String entrada, String regex) {
-        // Compila la expresión regular en un patrón.
-        Pattern patron = Pattern.compile(regex);
-        // Crea un objeto Matcher para buscar coincidencias en la entrada.
-        Matcher matcher = patron.matcher(entrada);
-        // Verifica si se encontró una coincidencia.
-        if (matcher.find()) {
-            // Devuelve el valor capturado por el grupo 1 de la expresión regular.
-            return matcher.group(1);
-        }
-        // Devuelve una cadena vacía si no se encontró el valor.
-        return ""; // Devuelve vacío si no encuentra el valor
+        guardarArchivoDuplicados(entradasDuplicadas, archivoDuplicados);
     }
 
     // Guarda el contenido en un archivo con el nombre especificado.
@@ -111,6 +91,17 @@ public class BibReaderHandler {
         } catch (IOException e) {
             // Maneja la excepción si ocurre un error al escribir el archivo.
             System.err.println("Error al guardar el archivo " + nombreArchivo + ": " + e.getMessage());
+        }
+    }
+
+    // Método para guardar los artículos duplicados en un archivo específico.
+    private static void guardarArchivoDuplicados(List<String> entradasDuplicadas, String archivoDuplicados) {
+        try (FileWriter fw = new FileWriter(archivoDuplicados)) {
+            for (String entrada : entradasDuplicadas) {
+                fw.write(entrada + "\n");
+            }
+        } catch (IOException e) {
+            System.err.println("Error al guardar el archivo de duplicados " + archivoDuplicados + ": " + e.getMessage());
         }
     }
 }
