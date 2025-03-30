@@ -6,4 +6,6 @@ public interface InformationServicio {
 
     List<Object> getInformation() throws Exception;
 
+    List<Object> getInformationAbstract() throws Exception;
+
 }

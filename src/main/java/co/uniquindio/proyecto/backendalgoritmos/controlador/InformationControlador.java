@@ -23,4 +23,10 @@ public class InformationControlador {
     public ResponseEntity<MensajeDTO<List<Object>>> getInformation() throws Exception {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, informationServicio.getInformation()));
     }
+
+    @GetMapping("/getInformationAbstract")
+    public ResponseEntity<MensajeDTO<List<Object>>> getInformationAbstract() throws Exception {
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, informationServicio.getInformationAbstract()));
+    }
+
 }

@@ -56,6 +56,7 @@ public class DocumentsExtractor { // Definición de la clase DocumentsExtractor
         article.setTitle(extractAttribute(articleContent, "title")); // Extrae el título del artículo
         article.setYear(extractYear(articleContent)); // Extrae el año del artículo
         article.setLocation(extractAttribute(articleContent, "location")); // Extrae la ubicación del artículo
+        article.setKeywords(extractAttribute(articleContent, "keywords"));
         article.setNumpages(extractPages(articleContent)); // Extrae
         article.setAbstractDescription(extractAttribute(articleContent, "abstract")); // Extrae el resumen del artículo
         return article; // Devuelve el artículo con las propiedades extraídas
