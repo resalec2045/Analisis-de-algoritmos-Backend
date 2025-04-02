@@ -10,6 +10,7 @@ import co.uniquindio.proyecto.backendalgoritmos.servicio.interfaces.InformationS
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class InformationImpl implements InformationServicio {
@@ -42,30 +43,39 @@ public class InformationImpl implements InformationServicio {
     }
 
     @Override
-    public List<Object> getInformationAbstract() {
-
+    public List<Object> generateKeywordReport() {
+        // Lista donde se guardan los resultados que se van a devolver al frontend
         List<Object> modelFront = new ArrayList<>();
-        String abstracts = "";
 
-        // Obtener el directorio actual y leer el archivo .bib
-        String directorioActual = System.getProperty("user.dir");
-        String bibFilePath = directorioActual + "/src/main/resources/co.uniquindio.proyecto.backendalgoritmos/articulos.bib";
+        // StringBuilder es más eficiente que usar concatenación de strings
+        StringBuilder abstractsBuilder = new StringBuilder();
+
+        // Ruta al archivo .bib (bibliografía/artículos) desde el directorio actual
+        String bibFilePath = System.getProperty("user.dir") +
+                "/src/main/resources/co.uniquindio.proyecto.backendalgoritmos/articulos.bib";
+
+        // Se leen los artículos del archivo .bib y se guardan como objetos
         List<DocumentsProperties> articles = DocumentsExtractor.readBibFile(bibFilePath);
 
+        // Por cada artículo, si tiene palabras clave, se agregan al StringBuilder
         for (DocumentsProperties doc : articles) {
-            String keywords = doc.getKeywords();
-            if (keywords != null) {
-                abstracts = abstracts + keywords + ", ";
+            if (doc.getKeywords() != null) {
+                //Aquí se está acumulando todas las keywords de los artículos en una sola cadena de forma eficiente
+                abstractsBuilder.append(doc.getKeywords()).append(", ");
             }
         }
 
-        modelFront.add(countKeywords(abstracts));
+        // Se convierte el contenido del StringBuilder a una sola cadena
+        String abstracts = abstractsBuilder.toString();
 
-        modelFront.add(getKeywordSortingResults(abstracts));
+        // Se agrega a la lista el resultado del conteo de keywords
+        modelFront.add(analyzeKeywordOccurrences(abstracts));
 
-        // Devolver el objeto con la lista estructurada bajo el autor
+        // Se agrega a la lista el resultado de ordenar las keywords con diferentes algoritmos
+        modelFront.add(applySortingAlgorithms(abstracts));
+
+        // Retorna la lista con ambos resultados: conteo y ordenamientos
         return modelFront;
-
     }
 
     private ModelSortingResults getAuthorSortingResults(List<DocumentsProperties> articles) {
@@ -196,49 +206,52 @@ public class InformationImpl implements InformationServicio {
 
     }
 
-    private ModelSortingResults getKeywordSortingResults(String keywordsString) {
+    private ModelSortingResults applySortingAlgorithms(String keywordsString) {
+        List<String> keywordWords = Arrays.stream(keywordsString.split(","))
+                .map(String::trim)
+                .filter(word -> !word.isEmpty())
+                .collect(Collectors.toList()); // recolecta los resultados de la stream
 
-        List<String> keywordWords = List.of(keywordsString.split(","));
-
-        // Crear los resultados de ordenamiento
         List<SortingResult> results = new ArrayList<>();
+        List<String> originalList = new ArrayList<>(keywordWords); // Para evitar split múltiple
 
-        results.add(new SortingResult("TimSort", SortingAlgorithms.timSort(new ArrayList<>(keywordWords))));
-        results.add(new SortingResult("CombSort", SortingAlgorithms.combSort(new ArrayList<>(keywordWords))));
-        results.add(new SortingResult("SelectionSort", SortingAlgorithms.selectionSort(new ArrayList<>(keywordWords))));
-        results.add(new SortingResult("TreeSort", SortingAlgorithms.treeSort(new ArrayList<>(keywordWords))));
-        results.add(new SortingResult("QuickSort", SortingAlgorithms.quickSort(new ArrayList<>(keywordWords))));
-        results.add(new SortingResult("HeapSort", SortingAlgorithms.heapSort(new ArrayList<>(keywordWords))));
-        results.add(new SortingResult("GnomeSort", SortingAlgorithms.gnomeSort(new ArrayList<>(keywordWords))));
-        results.add(new SortingResult("BinaryInsertionSort", SortingAlgorithms.binaryInsertionSort(new ArrayList<>(keywordWords))));
-        results.add(new SortingResult("PigeonholeSort", SortingAlgorithms.pigeonholeSort(new ArrayList<>(keywordWords))));
-        results.add(new SortingResult("BucketSort", SortingAlgorithms.bucketSort(new ArrayList<>(keywordWords))));
-        results.add(new SortingResult("BitonicSort", SortingAlgorithms.bitonicSort(new ArrayList<>(keywordWords))));
-        results.add(new SortingResult("RadixSort", SortingAlgorithms.radixSort(new ArrayList<>(keywordWords))));
+        // Aplicar los algoritmos de sorting sobre copias de la lista original
+        results.add(new SortingResult("TimSort", SortingAlgorithms.timSort(new ArrayList<>(originalList))));
+        results.add(new SortingResult("CombSort", SortingAlgorithms.combSort(new ArrayList<>(originalList))));
+        results.add(new SortingResult("SelectionSort", SortingAlgorithms.selectionSort(new ArrayList<>(originalList))));
+        results.add(new SortingResult("TreeSort", SortingAlgorithms.treeSort(new ArrayList<>(originalList))));
+        results.add(new SortingResult("QuickSort", SortingAlgorithms.quickSort(new ArrayList<>(originalList))));
+        results.add(new SortingResult("HeapSort", SortingAlgorithms.heapSort(new ArrayList<>(originalList))));
+        results.add(new SortingResult("GnomeSort", SortingAlgorithms.gnomeSort(new ArrayList<>(originalList))));
+        results.add(new SortingResult("BinaryInsertionSort", SortingAlgorithms.binaryInsertionSort(new ArrayList<>(originalList))));
+        results.add(new SortingResult("PigeonholeSort", SortingAlgorithms.pigeonholeSort(new ArrayList<>(originalList))));
+        results.add(new SortingResult("BucketSort", SortingAlgorithms.bucketSort(new ArrayList<>(originalList))));
+        results.add(new SortingResult("BitonicSort", SortingAlgorithms.bitonicSort(new ArrayList<>(originalList))));
+        results.add(new SortingResult("RadixSort", SortingAlgorithms.radixSort(new ArrayList<>(originalList))));
+        results.add(new SortingResult("bubbleSort", SortingAlgorithms.bubbleSort(new ArrayList<>(originalList))));
 
         return new ModelSortingResults("Keywords", results, keywordWords.size());
     }
 
-    public static List<KeywordStat> countKeywords(String keywordsString) {
-        String[] words = keywordsString.split(",");
+    public static List<KeywordStat> analyzeKeywordOccurrences(String keywordsString) {
+        // Mapa que guarda el conteo de cada palabra clave conocida
         Map<String, Integer> keywordCount = new LinkedHashMap<>();
+        // mantiene el mismo orden en que aparecen las keywords originales
 
+        // Inicializa todas las keywords conocidas con conteo 0
         for (String keyword : KEYWORDS) {
             keywordCount.put(keyword, 0);
         }
 
-        for (String word : words) {
-            String trimmedWord = word.trim();
-            if (keywordCount.containsKey(trimmedWord)) {
-                keywordCount.put(trimmedWord, keywordCount.get(trimmedWord) + 1);
-            }
-        }
+        // Divide el string, limpia espacios, y si la palabra está en el mapa, suma 1
+        Arrays.stream(keywordsString.split(","))
+                .map(String::trim)// quita espacios,convierte cada elemento en algo nuevo.
+                .filter(word -> keywordCount.containsKey(word)) //filtra elementos que cumplan con la condicion
+                .forEach(word -> keywordCount.put(word, keywordCount.get(word) + 1));
 
-        List<KeywordStat> result = new ArrayList<>();
-        for (Map.Entry<String, Integer> entry : keywordCount.entrySet()) {
-            result.add(new KeywordStat(entry.getKey(), entry.getValue()));
-        }
-
-        return result;
+        // Convierte el mapa en una lista de objetos KeywordStat (nombre + cantidad)
+        return keywordCount.entrySet().stream() // secuencia de datos que puedan procesar
+                .map(entry -> new KeywordStat(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
     }
 }

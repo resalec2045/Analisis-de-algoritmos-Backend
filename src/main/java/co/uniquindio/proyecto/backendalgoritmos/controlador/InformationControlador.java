@@ -24,9 +24,9 @@ public class InformationControlador {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, informationServicio.getInformation()));
     }
 
-    @GetMapping("/getInformationAbstract")
-    public ResponseEntity<MensajeDTO<List<Object>>> getInformationAbstract() throws Exception {
-        return ResponseEntity.ok().body(new MensajeDTO<>(false, informationServicio.getInformationAbstract()));
+    @GetMapping("/generateKeywordReport")
+    public ResponseEntity<MensajeDTO<List<Object>>> generateKeywordReport() throws Exception {
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, informationServicio.generateKeywordReport()));
     }
 
 }
