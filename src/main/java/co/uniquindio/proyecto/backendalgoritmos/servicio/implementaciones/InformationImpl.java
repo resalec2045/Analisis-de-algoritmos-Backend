@@ -229,6 +229,8 @@ public class InformationImpl implements InformationServicio {
         results.add(new SortingResult("BitonicSort", SortingAlgorithms.bitonicSort(new ArrayList<>(originalList))));
         results.add(new SortingResult("RadixSort", SortingAlgorithms.radixSort(new ArrayList<>(originalList))));
         results.add(new SortingResult("bubbleSort", SortingAlgorithms.bubbleSort(new ArrayList<>(originalList))));
+        results.add(new SortingResult("cocktailShakerSort", SortingAlgorithms.cocktailShakerSort(new ArrayList<>(originalList))));
+        results.add(new SortingResult("shellSort", SortingAlgorithms.shellSort(new ArrayList<>(originalList))));
 
         return new ModelSortingResults("Keywords", results, keywordWords.size());
     }

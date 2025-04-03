@@ -395,4 +395,54 @@ public class SortingAlgorithms {
         return System.nanoTime() - startTime;
     }
 
+    //14. cocktail shaker sort
+    public static long cocktailShakerSort(List<String> list) {
+        long startTime = System.nanoTime();
+        boolean swapped = true;
+        int start = 0;
+        int end = list.size() - 1;
+
+        while (swapped) {
+            swapped = false;
+
+            for (int i = start; i < end; i++) {
+                if (list.get(i).compareTo(list.get(i + 1)) > 0) {
+                    Collections.swap(list, i, i + 1);
+                    swapped = true;
+                }
+            }
+
+            if (!swapped) break;
+
+            swapped = false;
+            end--;
+
+            for (int i = end - 1; i >= start; i--) {
+                if (list.get(i).compareTo(list.get(i + 1)) > 0) {
+                    Collections.swap(list, i, i + 1);
+                    swapped = true;
+                }
+            }
+            start++;
+        }
+        return System.nanoTime() - startTime;
+    }
+
+    //15. shell sort
+    public static long shellSort(List<String> list) {
+        long startTime = System.nanoTime();
+        int n = list.size();
+        for (int gap = n / 2; gap > 0; gap /= 2) {
+            for (int i = gap; i < n; i++) {
+                String temp = list.get(i);
+                int j;
+                for (j = i; j >= gap && list.get(j - gap).compareTo(temp) > 0; j -= gap) {
+                    list.set(j, list.get(j - gap));
+                }
+                list.set(j, temp);
+            }
+        }
+        return System.nanoTime() - startTime;
+    }
+
 }
