@@ -73,7 +73,7 @@ public class ScienceDirectHandler {
 
             // Enter password
             WebElement passwordField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("Passwd")));
-            escribirComoHumano(driver, passwordField, "Lindaraja11,."); // Replace with your password
+            escribirComoHumano(driver, passwordField, ""); // Replace with your password
             passwordField.sendKeys(Keys.RETURN);
             Thread.sleep(10000);
 
