@@ -95,10 +95,10 @@ public class InformationImpl implements InformationServicio {
         results.add(new SortingResult("BucketSort", SortingAlgorithms.bucketSort(list)));
         results.add(new SortingResult("BitonicSort", SortingAlgorithms.bitonicSort(list)));
         results.add(new SortingResult("RadixSort", SortingAlgorithms.radixSort(list)));
-        results.add(new SortingResult("Burbuja", SortingAlgorithms.burbuja(list)));
-        results.add(new SortingResult("BurbujaDoble", SortingAlgorithms.burbujaDoble(list)));
-        results.add(new SortingResult("Seleccion", SortingAlgorithms.seleccion(list)));
-        results.add(new SortingResult("ShellSort", SortingAlgorithms.shellSort(list)));
+        results.add(new SortingResult("Burbuja", SortingAlgorithms.burbujaString(list)));
+        results.add(new SortingResult("BurbujaDoble", SortingAlgorithms.burbujaDobleString(list)));
+        results.add(new SortingResult("Seleccion", SortingAlgorithms.seleccionString(list)));
+        results.add(new SortingResult("ShellSort", SortingAlgorithms.shellSortString(list)));
 
         return new ModelSortingResults(author, results, list.size());
 
@@ -131,10 +131,10 @@ public class InformationImpl implements InformationServicio {
         results.add(new SortingResult("BucketSort", SortingAlgorithms.bucketSort(list)));
         results.add(new SortingResult("BitonicSort", SortingAlgorithms.bitonicSort(list)));
         results.add(new SortingResult("RadixSort", SortingAlgorithms.radixSort(list)));
-        results.add(new SortingResult("Burbuja", SortingAlgorithms.burbuja(list)));
-        results.add(new SortingResult("BurbujaDoble", SortingAlgorithms.burbujaDoble(list)));
-        results.add(new SortingResult("Seleccion", SortingAlgorithms.seleccion(list)));
-        results.add(new SortingResult("ShellSort", SortingAlgorithms.shellSort(list)));
+        results.add(new SortingResult("Burbuja", SortingAlgorithms.burbujaString(list)));
+        results.add(new SortingResult("BurbujaDoble", SortingAlgorithms.burbujaDobleString(list)));
+        results.add(new SortingResult("Seleccion", SortingAlgorithms.seleccionString(list)));
+        results.add(new SortingResult("ShellSort", SortingAlgorithms.shellSortString(list)));
 
         return new ModelSortingResults(author, results, list.size());
 
@@ -231,10 +231,10 @@ public class InformationImpl implements InformationServicio {
         results.add(new SortingResult("BucketSort", SortingAlgorithms.bucketSort(new ArrayList<>(keywordWords))));
         results.add(new SortingResult("BitonicSort", SortingAlgorithms.bitonicSort(new ArrayList<>(keywordWords))));
         results.add(new SortingResult("RadixSort", SortingAlgorithms.radixSort(new ArrayList<>(keywordWords))));
-        results.add(new SortingResult("Burbuja", SortingAlgorithms.burbuja(new ArrayList<>(keywordWords))));
-        results.add(new SortingResult("BurbujaDoble", SortingAlgorithms.burbujaDoble(new ArrayList<>(keywordWords))));
-        results.add(new SortingResult("Seleccion", SortingAlgorithms.seleccion(new ArrayList<>(keywordWords))));
-        results.add(new SortingResult("ShellSort", SortingAlgorithms.shellSort(new ArrayList<>(keywordWords))));
+        results.add(new SortingResult("Burbuja", SortingAlgorithms.burbujaString(new ArrayList<>(keywordWords))));
+        results.add(new SortingResult("BurbujaDoble", SortingAlgorithms.burbujaDobleString(new ArrayList<>(keywordWords))));
+        results.add(new SortingResult("Seleccion", SortingAlgorithms.seleccionString(new ArrayList<>(keywordWords))));
+        results.add(new SortingResult("ShellSort", SortingAlgorithms.shellSortString(new ArrayList<>(keywordWords))));
 
         return new ModelSortingResults("Keywords", results, keywordWords.size());
     }

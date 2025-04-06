@@ -398,6 +398,46 @@ public class SortingAlgorithms {
         return System.nanoTime() - startTime;
     }
 
+    public static long burbujaString(List<String> arreglo) {
+        long startTime = System.nanoTime();
+
+        for (int j = 1; j < arreglo.size(); j++) {
+            for (int i = 0; i < arreglo.size() - 1; i++) {
+                if (arreglo.get(i).compareTo(arreglo.get(i + 1)) > 0) {
+                    Collections.swap(arreglo, i, i + 1);
+                }
+            }
+        }
+
+        return System.nanoTime() - startTime;
+    }
+
+    public static long burbujaDobleString(List<String> x) {
+        long startTime = System.nanoTime();
+
+        int primero = 1, ultimo = x.size() - 1, dir = x.size() - 1;
+        while (ultimo >= primero) {
+            for (int i = ultimo; i >= primero; i--) {
+                if (x.get(i - 1).compareTo(x.get(i)) > 0) {
+                    Collections.swap(x, i - 1, i);
+                    dir = i;
+                }
+            }
+            primero = dir + 1;
+            for (int i = primero; i <= ultimo; i++) {
+                if (x.get(i - 1).compareTo(x.get(i)) > 0) {
+                    Collections.swap(x, i - 1, i);
+                    dir = i;
+                }
+            }
+            ultimo = dir - 1;
+        }
+
+        return System.nanoTime() - startTime;
+    }
+
+
+
     public static long burbujaDoble(List<String> x) {
         long startTime = System.nanoTime();
 
@@ -425,6 +465,46 @@ public class SortingAlgorithms {
 
         return System.nanoTime() - startTime;
     }
+
+    public static long seleccionString(List<String> arreglo) {
+        long startTime = System.nanoTime();
+
+        for (int i = 0; i < arreglo.size() - 1; i++) {
+            String menor = arreglo.get(i);
+            int k = i;
+            for (int j = i + 1; j < arreglo.size(); j++) {
+                if (arreglo.get(j).compareTo(menor) < 0) {
+                    menor = arreglo.get(j);
+                    k = j;
+                }
+            }
+            Collections.swap(arreglo, i, k);
+        }
+
+        return System.nanoTime() - startTime;
+    }
+
+    public static long shellSortString(List<String> a) {
+        long startTime = System.nanoTime();
+
+        for (int incr = a.size() / 2; incr > 0; incr /= 2) {
+            for (int i = incr; i < a.size(); i++) {
+                int j = i - incr;
+                while (j >= 0) {
+                    if (a.get(j).compareTo(a.get(j + incr)) > 0) {
+                        Collections.swap(a, j, j + incr);
+                        j -= incr;
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return System.nanoTime() - startTime;
+    }
+
+
 
     public static long seleccion(List<String> arreglo) {
         long startTime = System.nanoTime();
