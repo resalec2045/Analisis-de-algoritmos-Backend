@@ -4,6 +4,7 @@ import co.uniquindio.proyecto.backendalgoritmos.models.DocumentsProperties;
 import co.uniquindio.proyecto.backendalgoritmos.models.KeywordStat;
 import co.uniquindio.proyecto.backendalgoritmos.models.ModelSortingResults;
 import co.uniquindio.proyecto.backendalgoritmos.models.SortingResult;
+import co.uniquindio.proyecto.backendalgoritmos.modules.OrderingMethods.RadixAlgorithms.ColaEnlazada;
 import co.uniquindio.proyecto.backendalgoritmos.modules.OrderingMethods.SortingAlgorithms;
 import co.uniquindio.proyecto.backendalgoritmos.modules.DocuemntsExtractor.DocumentsExtractor;
 import co.uniquindio.proyecto.backendalgoritmos.servicio.interfaces.InformationServicio;
@@ -152,6 +153,19 @@ public class InformationImpl implements InformationServicio {
 
         // Obtener el nombre del autor (tomando el primero de la lista si existe)
         String author = "Año";
+        int[] arreglo = convertirListaAEnteros(list);
+        ColaEnlazada[] Q =  {
+                new ColaEnlazada(),
+                new ColaEnlazada(),
+                new ColaEnlazada(),
+                new ColaEnlazada(),
+                new ColaEnlazada(),
+                new ColaEnlazada(),
+                new ColaEnlazada(),
+                new ColaEnlazada(),
+                new ColaEnlazada(),
+                new ColaEnlazada()
+        };
 
         // Lista de resultados de los algoritmos
         List<SortingResult> results = new ArrayList<>();
@@ -171,7 +185,7 @@ public class InformationImpl implements InformationServicio {
         results.add(new SortingResult("BurbujaDoble", SortingAlgorithms.burbujaDoble(list)));
         results.add(new SortingResult("Seleccion", SortingAlgorithms.seleccion(list)));
         results.add(new SortingResult("ShellSort", SortingAlgorithms.shellSort(list)));
-
+        results.add(new SortingResult("Radix", SortingAlgorithms.radix(arreglo, Q)));
         return new ModelSortingResults(author, results, list.size());
 
     }
@@ -185,6 +199,19 @@ public class InformationImpl implements InformationServicio {
                 list.add(keywords);
             }
         }
+        int[] arreglo = convertirListaAEnteros(list);
+        ColaEnlazada[] Q =  {
+                new ColaEnlazada(),
+                new ColaEnlazada(),
+                new ColaEnlazada(),
+                new ColaEnlazada(),
+                new ColaEnlazada(),
+                new ColaEnlazada(),
+                new ColaEnlazada(),
+                new ColaEnlazada(),
+                new ColaEnlazada(),
+                new ColaEnlazada()
+        };
 
         // Obtener el nombre del autor (tomando el primero de la lista si existe)
         String author = "Número de páginas";
@@ -207,6 +234,7 @@ public class InformationImpl implements InformationServicio {
         results.add(new SortingResult("BurbujaDoble", SortingAlgorithms.burbujaDoble(list)));
         results.add(new SortingResult("Seleccion", SortingAlgorithms.seleccion(list)));
         results.add(new SortingResult("ShellSort", SortingAlgorithms.shellSort(list)));
+        results.add(new SortingResult("Radix", SortingAlgorithms.radix(arreglo, Q)));
 
         return new ModelSortingResults(author, results, list.size());
 
@@ -261,4 +289,13 @@ public class InformationImpl implements InformationServicio {
 
         return result;
     }
+
+    public static int[] convertirListaAEnteros(List<String> lista) {
+        int[] resultado = new int[lista.size()];
+        for (int i = 0; i < lista.size(); i++) {
+            resultado[i] = Integer.parseInt(lista.get(i));
+        }
+        return resultado;
+    }
+
 }

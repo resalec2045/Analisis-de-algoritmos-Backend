@@ -1,4 +1,6 @@
 package co.uniquindio.proyecto.backendalgoritmos.modules.OrderingMethods;
+import co.uniquindio.proyecto.backendalgoritmos.modules.OrderingMethods.RadixAlgorithms.ColaEnlazada;
+
 import java.util.*;
 
 public class SortingAlgorithms {
@@ -547,4 +549,47 @@ public class SortingAlgorithms {
         return System.nanoTime() - startTime;
     }
 
+    public static void sort(int[] a, int numeroDigitos, ColaEnlazada[] Q)
+    {
+        int posArreglo;
+        for (int i = 1; i<= numeroDigitos; i++)
+        {
+            posArreglo = 0;
+            for (int j = 0; j < a.length; j++)
+            {
+                Q[obtenerRadical(a[j], i)].
+                        encolar(a[j]);
+
+            }
+            for (int j = 0; j < Q.length; j++)
+            {
+                while (!Q[j].estaVacia())
+                {
+                    a[posArreglo] = Q[j].decolar();
+                    posArreglo++;
+                }
+            }
+        }
+    }
+    public static int obtenerRadical(int numero,int radical)
+    {
+        return (int)
+                (numero/Math.pow(10, radical-1)) % 10;
+    }
+
+    public static long radix(int[] a, ColaEnlazada[] Q) {
+        long startTime = System.nanoTime();
+
+        int max = 0;
+        for (int i = 0; i < a.length; i++) {
+            if (a[i] > max) {
+                max = a[i];
+            }
+        }
+
+        int numeroDigitos = String.valueOf(max).length();
+        sort(a, numeroDigitos, Q);
+
+        return System.nanoTime() - startTime;
+    }
 }
