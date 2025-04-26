@@ -382,4 +382,83 @@ public class SortingAlgorithms {
         }
     }
 
+    // 13. Burbuja
+    public static long bubbleSort(List<String> list) {
+        long startTime = System.nanoTime();
+
+        int n = list.size();
+        boolean swapped;
+
+        for (int i = 0; i < n - 1; i++) {
+            swapped = false;
+            for (int j = 0; j < n - 1 - i; j++) {
+                if (list.get(j).compareTo(list.get(j + 1)) > 0) {
+                    // Intercambio de elementos
+                    String temp = list.get(j);
+                    list.set(j, list.get(j + 1));
+                    list.set(j + 1, temp);
+                    swapped = true;
+                }
+            }
+            // Si no hubo intercambio, la lista ya está ordenada
+            if (!swapped) {
+                break;
+            }
+        }
+
+        return System.nanoTime() - startTime;
+    }
+
+    // 14. Burbuja doble
+    public static long cocktailSort(List<String> list) {
+        long startTime = System.nanoTime();
+
+        int primero = 1;
+        int ultimo = list.size() - 1;
+        int dir = list.size() - 1;
+
+        while (ultimo >= primero) {
+            // Recorrido de derecha a izquierda
+            for (int i = ultimo; i >= primero; i--) {
+                if (list.get(i - 1).compareTo(list.get(i)) > 0) {
+                    String temp = list.get(i - 1);
+                    list.set(i - 1, list.get(i));
+                    list.set(i, temp);
+                    dir = i;
+                }
+            }
+            primero = dir + 1;
+
+            // Recorrido de izquierda a derecha
+            for (int i = primero; i <= ultimo; i++) {
+                if (list.get(i - 1).compareTo(list.get(i)) > 0) {
+                    String temp = list.get(i - 1);
+                    list.set(i - 1, list.get(i));
+                    list.set(i, temp);
+                    dir = i;
+                }
+            }
+            ultimo = dir - 1;
+        }
+
+        return System.nanoTime() - startTime;
+    }
+
+    // 15. Shell Sort
+    public static long shellSort(List<String> list) {
+        long startTime = System.nanoTime();
+        int n = list.size();
+        for (int gap = n / 2; gap > 0; gap /= 2) {
+            for (int i = gap; i < n; i++) {
+                String temp = list.get(i);
+                int j;
+                for (j = i; j >= gap && list.get(j - gap).compareTo(temp) > 0; j -= gap) {
+                    list.set(j, list.get(j - gap));
+                }
+                list.set(j, temp);
+            }
+        }
+        return System.nanoTime() - startTime;
+    }
+
 }
