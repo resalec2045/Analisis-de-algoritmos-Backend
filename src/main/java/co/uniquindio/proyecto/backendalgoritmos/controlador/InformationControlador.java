@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -27,6 +28,11 @@ public class InformationControlador {
     @GetMapping("/getInformationAbstract")
     public ResponseEntity<MensajeDTO<List<Object>>> getInformationAbstract() throws Exception {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, informationServicio.getInformationAbstract()));
+    }
+
+    @GetMapping("/preprocesamientoTexto")
+    public ResponseEntity<MensajeDTO<Map<String, Object>>> preprocesamientoTexto() throws Exception {
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, informationServicio.preprocesamientoTexto()));
     }
 
 }

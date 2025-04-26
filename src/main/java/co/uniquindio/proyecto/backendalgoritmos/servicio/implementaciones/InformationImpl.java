@@ -6,6 +6,10 @@ import co.uniquindio.proyecto.backendalgoritmos.models.ModelSortingResults;
 import co.uniquindio.proyecto.backendalgoritmos.models.SortingResult;
 import co.uniquindio.proyecto.backendalgoritmos.modules.OrderingMethods.SortingAlgorithms;
 import co.uniquindio.proyecto.backendalgoritmos.modules.DocuemntsExtractor.DocumentsExtractor;
+import co.uniquindio.proyecto.backendalgoritmos.modules.ProcesamientoTexto.AglomerativeClustering;
+import co.uniquindio.proyecto.backendalgoritmos.modules.ProcesamientoTexto.Cluster;
+import co.uniquindio.proyecto.backendalgoritmos.modules.ProcesamientoTexto.PreprocesamientoTexto;
+import co.uniquindio.proyecto.backendalgoritmos.modules.ProcesamientoTexto.TreeConverter;
 import co.uniquindio.proyecto.backendalgoritmos.servicio.interfaces.InformationServicio;
 import org.springframework.stereotype.Service;
 
@@ -67,6 +71,97 @@ public class InformationImpl implements InformationServicio {
         return modelFront;
 
     }
+
+    @Override
+    public Map<String, Object> preprocesamientoTexto() {
+        List<String> abstracts = new ArrayList<>();
+
+        String directorioActual = System.getProperty("user.dir");
+        String bibFilePath = directorioActual + "/src/main/resources/co.uniquindio.proyecto.backendalgoritmos/articulos.bib";
+        List<DocumentsProperties> articles = DocumentsExtractor.readBibFile(bibFilePath);
+
+        for (DocumentsProperties doc : articles) {
+            String abstractDescription = doc.getAbstractDescription();
+            if (abstractDescription != null && !abstractDescription.trim().isEmpty()) {
+                abstracts.add(abstractDescription.trim());
+            }
+        }
+
+        if (abstracts.size() < 1) {
+            throw new IllegalArgumentException("Se requiere al menos un abstract.");
+        }
+
+        Random random = new Random();
+        String selectedAbstract = abstracts.get(random.nextInt(abstracts.size()));
+
+        List<String> palabras = PreprocesamientoTexto.preprocesarTexto(selectedAbstract);
+
+        Map<String, Object> dendrograma = construirArbolAgrupandoPrefijos(palabras);
+
+        return dendrograma;
+    }
+
+    private static final Set<String> VERBOS_COMUNES = Set.of(
+            "is", "are", "was", "were", "be", "been", "being",
+            "have", "has", "had", "do", "does", "did",
+            "can", "could", "will", "would", "shall", "should",
+            "may", "might", "must", "ought", "make", "makes", "made",
+            "use", "uses", "used", "develop", "develops", "developed",
+            "create", "creates", "created", "provide", "provides", "provided",
+            "apply", "applies", "applied", "consider", "considers", "considered"
+    );
+
+    private Map<String, Object> construirArbolAgrupandoPrefijos(List<String> palabrasOriginales) {
+        Map<String, Object> raiz = new HashMap<>();
+        raiz.put("name", "Grupo");
+
+        Map<String, List<String>> agrupaciones = new HashMap<>();
+
+        for (String palabra : palabrasOriginales) {
+            if (VERBOS_COMUNES.contains(palabra)) {
+                continue; // ⚡ Si es verbo común, ignorarlo
+            }
+
+            boolean agregado = false;
+            for (String key : agrupaciones.keySet()) {
+                if (palabra.startsWith(key.substring(0, Math.min(3, key.length())))) { // agrupar por prefijo
+                    agrupaciones.get(key).add(palabra);
+                    agregado = true;
+                    break;
+                }
+            }
+            if (!agregado) {
+                agrupaciones.put(palabra, new ArrayList<>(List.of(palabra)));
+            }
+        }
+
+        List<Map<String, Object>> hijos = new ArrayList<>();
+        raiz.put("children", hijos);
+
+        for (Map.Entry<String, List<String>> entry : agrupaciones.entrySet()) {
+            Map<String, Object> nodoAgrupador = new HashMap<>();
+            nodoAgrupador.put("name", entry.getKey());
+
+            List<Map<String, Object>> hijosPalabras = new ArrayList<>();
+
+            for (String palabra : entry.getValue()) {
+                if (!palabra.equals(entry.getKey())) {
+                    Map<String, Object> hijo = new HashMap<>();
+                    hijo.put("name", palabra);
+                    hijosPalabras.add(hijo);
+                }
+            }
+
+            if (!hijosPalabras.isEmpty()) {
+                nodoAgrupador.put("children", hijosPalabras);
+            }
+
+            hijos.add(nodoAgrupador);
+        }
+
+        return raiz;
+    }
+
 
     private ModelSortingResults getAuthorSortingResults(List<DocumentsProperties> articles) {
         List<String> list = new ArrayList<>();
@@ -244,4 +339,5 @@ public class InformationImpl implements InformationServicio {
 
         return result;
     }
+
 }
