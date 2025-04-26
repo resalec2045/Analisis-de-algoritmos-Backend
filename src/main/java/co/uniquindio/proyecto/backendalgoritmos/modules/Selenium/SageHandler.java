@@ -67,7 +67,7 @@ public class SageHandler {
             Thread.sleep(3000);
 
             WebElement passwordField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("Passwd")));
-            escribirComoHumano(driver, passwordField, "Lindaraja11,.");
+            escribirComoHumano(driver, passwordField, "");
             passwordField.sendKeys(Keys.RETURN);
             Thread.sleep(10000);
 
