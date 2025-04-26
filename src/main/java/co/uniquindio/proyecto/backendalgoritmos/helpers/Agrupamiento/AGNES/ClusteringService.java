@@ -74,16 +74,28 @@ public class ClusteringService {
         String nombre1 = encontrarPrimerNombre(c1);
         String nombre2 = encontrarPrimerNombre(c2);
 
-        if (sonSemanticamenteRelacionadas(nombre1, nombre2)) {
-            return nombre1 + "-" + nombre2;
-        }
+        // Si alguno de los nombres es muy corto, ignorarlo
+        nombre1 = (nombre1 != null && nombre1.length() >= 4) ? nombre1 : "";
+        nombre2 = (nombre2 != null && nombre2.length() >= 4) ? nombre2 : "";
 
-        String prefijo = prefijoComun(nombre1, nombre2);
+        if (!nombre1.isEmpty() && !nombre2.isEmpty()) {
+            if (sonSemanticamenteRelacionadas(nombre1, nombre2)) {
+                return nombre1 + "-" + nombre2;
+            }
 
-        if (!prefijo.isEmpty()) {
-            return prefijo;
+            String prefijo = prefijoComun(nombre1, nombre2);
+
+            if (!prefijo.isEmpty() && prefijo.length() >= 4) {
+                return prefijo;
+            } else {
+                return nombre1 + "-" + nombre2;
+            }
+        } else if (!nombre1.isEmpty()) {
+            return nombre1;
+        } else if (!nombre2.isEmpty()) {
+            return nombre2;
         } else {
-            return nombre1 + "-" + nombre2;
+            return "Cluster";
         }
     }
 

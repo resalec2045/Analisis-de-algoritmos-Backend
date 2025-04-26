@@ -30,9 +30,19 @@ public class InformationControlador {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, informationServicio.getInformationAbstract()));
     }
 
-    @GetMapping("/preprocesamientoTexto")
-    public ResponseEntity<MensajeDTO<Map<String, Object>>> preprocesamientoTexto() throws Exception {
-        return ResponseEntity.ok().body(new MensajeDTO<>(false, informationServicio.preprocesamientoTexto()));
+    @GetMapping("/preprocesamientoTextoAgnes")
+    public ResponseEntity<MensajeDTO<Map<String, Object>>> preprocesamientoTextoAgnes() throws Exception {
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, informationServicio.preprocesamientoTextoAgnes()));
+    }
+
+    @GetMapping("/preprocesamientoTextoDiana")
+    public ResponseEntity<MensajeDTO<Map<String, Object>>> preprocesamientoTextoDiana() throws Exception {
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, informationServicio.preprocesamientoTextoDiana()));
+    }
+
+    @GetMapping("/preprocesamientoDescriptionUtiliced")
+    public ResponseEntity<MensajeDTO<String>> preprocesamientoDescriptionUtiliced() throws Exception {
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, informationServicio.preprocesamientoDescriptionUtiliced()));
     }
 
 }

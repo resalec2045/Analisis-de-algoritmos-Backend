@@ -9,6 +9,10 @@ public interface InformationServicio {
 
     List<Object> getInformationAbstract() throws Exception;
 
-    Map<String, Object> preprocesamientoTexto() throws Exception;
+    Map<String, Object> preprocesamientoTextoAgnes() throws Exception;
+
+    Map<String, Object> preprocesamientoTextoDiana() throws Exception;
+
+    String preprocesamientoDescriptionUtiliced() throws Exception;
 
 }

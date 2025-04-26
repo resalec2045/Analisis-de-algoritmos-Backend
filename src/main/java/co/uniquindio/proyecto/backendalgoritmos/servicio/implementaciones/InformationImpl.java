@@ -54,36 +54,36 @@ public class InformationImpl implements InformationServicio {
     }
 
 //    ! Medoto para AGNES
-//    @Override
-//    public Map<String, Object> preprocesamientoTexto() {
-//        List<String> abstracts = new ArrayList<>();
-//
-//        String directorioActual = System.getProperty("user.dir");
-//        String bibFilePath = directorioActual + "/src/main/resources/co.uniquindio.proyecto.backendalgoritmos/articulos.bib";
-//        List<DocumentsProperties> articles = DocumentsExtractor.readBibFile(bibFilePath);
-//
-//        for (DocumentsProperties doc : articles) {
-//            String abstractDescription = doc.getAbstractDescription();
-//            if (abstractDescription != null && !abstractDescription.trim().isEmpty()) {
-//                abstracts.add(abstractDescription.trim());
-//            }
-//        }
-//
-//        if (abstracts.isEmpty()) {
-//            throw new IllegalArgumentException("Se requiere al menos un abstract.");
-//        }
-//
-//        Random random = new Random();
-////        String selectedAbstract = abstracts.get(random.nextInt(abstracts.size()));
-//        String selectedAbstract = abstracts.get(0);
-//        List<String> palabras = PreprocesamientoTexto.preprocesarTexto(selectedAbstract);
-//
-//        return clusteringService.clusteringJerarquicoPalabras(palabras);
-//    }
+    @Override
+    public Map<String, Object> preprocesamientoTextoAgnes() {
+        List<String> abstracts = new ArrayList<>();
+
+        String directorioActual = System.getProperty("user.dir");
+        String bibFilePath = directorioActual + "/src/main/resources/co.uniquindio.proyecto.backendalgoritmos/articulos.bib";
+        List<DocumentsProperties> articles = DocumentsExtractor.readBibFile(bibFilePath);
+
+        for (DocumentsProperties doc : articles) {
+            String abstractDescription = doc.getAbstractDescription();
+            if (abstractDescription != null && !abstractDescription.trim().isEmpty()) {
+                abstracts.add(abstractDescription.trim());
+            }
+        }
+
+        if (abstracts.isEmpty()) {
+            throw new IllegalArgumentException("Se requiere al menos un abstract.");
+        }
+
+        Random random = new Random();
+//        String selectedAbstract = abstracts.get(random.nextInt(abstracts.size()));
+        String selectedAbstract = abstracts.get(0);
+        List<String> palabras = PreprocesamientoTexto.preprocesarTexto(selectedAbstract);
+
+        return clusteringService.clusteringJerarquicoPalabras(palabras);
+    }
 
     //    ! Medoto para Diana
     @Override
-    public Map<String, Object> preprocesamientoTexto() {
+    public Map<String, Object> preprocesamientoTextoDiana() {
         List<String> abstracts = new ArrayList<>();
 
         // 1. Leer archivo .bib
@@ -112,4 +112,23 @@ public class InformationImpl implements InformationServicio {
         // 6. Aplicar DIANA: clustering divisivo
         return DivisiveClustering.dividirPalabras(palabras);
     }
+
+    @Override
+    public String preprocesamientoDescriptionUtiliced() {
+        List<String> abstracts = new ArrayList<>();
+
+        String directorioActual = System.getProperty("user.dir");
+        String bibFilePath = directorioActual + "/src/main/resources/co.uniquindio.proyecto.backendalgoritmos/articulos.bib";
+        List<DocumentsProperties> articles = DocumentsExtractor.readBibFile(bibFilePath);
+
+        for (DocumentsProperties doc : articles) {
+            String abstractDescription = doc.getAbstractDescription();
+            if (abstractDescription != null && !abstractDescription.trim().isEmpty()) {
+                abstracts.add(abstractDescription.trim());
+            }
+        }
+
+        return abstracts.get(0);
+    }
+
 }

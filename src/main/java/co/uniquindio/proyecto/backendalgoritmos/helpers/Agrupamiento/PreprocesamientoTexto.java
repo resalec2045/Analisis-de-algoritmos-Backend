@@ -37,14 +37,16 @@ public class PreprocesamientoTexto {
         // 3. Dividir en palabras (tokenizar)
         String[] tokens = texto.split("\\s+");
 
-        // 4. Eliminar palabras vacías (stopwords)
-        List<String> palabrasUtiles = new ArrayList<>();
+        // 4. Eliminar stopwords, palabras menores a 4 letras y duplicados
+        Set<String> palabrasUtiles = new LinkedHashSet<>(); // ⚡ Usamos Set para evitar duplicados manteniendo orden
         for (String token : tokens) {
-            if (!STOPWORDS.contains(token) && !token.isEmpty()) {
+            if (!STOPWORDS.contains(token) && !token.isEmpty() && token.length() >= 4) {
                 palabrasUtiles.add(token);
             }
         }
 
-        return palabrasUtiles;
+        return new ArrayList<>(palabrasUtiles);
     }
+
+
 }
