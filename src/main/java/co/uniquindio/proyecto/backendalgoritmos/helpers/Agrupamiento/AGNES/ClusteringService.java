@@ -1,4 +1,6 @@
-package co.uniquindio.proyecto.backendalgoritmos.modules.ProcesamientoTexto;
+package co.uniquindio.proyecto.backendalgoritmos.helpers.Agrupamiento.AGNES;
+
+import co.uniquindio.proyecto.backendalgoritmos.helpers.Agrupamiento.Cluster;
 
 import java.util.*;
 

@@ -1,4 +1,4 @@
-package co.uniquindio.proyecto.backendalgoritmos.modules.ProcesamientoTexto;
+package co.uniquindio.proyecto.backendalgoritmos.helpers.Agrupamiento;
 
 import java.util.ArrayList;
 import java.util.List;
