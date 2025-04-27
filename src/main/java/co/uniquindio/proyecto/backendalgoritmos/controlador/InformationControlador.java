@@ -65,6 +65,11 @@ public class InformationControlador {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, informationServicio.requerimiento3()));
     }
 
+    @GetMapping("/requerimiento3_2")
+    public ResponseEntity<MensajeDTO<Map<String, Object>>> requerimiento3_2() throws Exception {
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, informationServicio.requerimiento3_2()));
+    }
+
 //    ! Requerimiento 5
 
 }

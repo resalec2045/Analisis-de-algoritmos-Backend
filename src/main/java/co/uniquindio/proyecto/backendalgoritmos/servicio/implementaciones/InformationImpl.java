@@ -2,6 +2,7 @@ package co.uniquindio.proyecto.backendalgoritmos.servicio.implementaciones;
 
 import co.uniquindio.proyecto.backendalgoritmos.helpers.AbstractAnalyzer;
 import co.uniquindio.proyecto.backendalgoritmos.helpers.Agrupamiento.DIANA.DivisiveClustering;
+import co.uniquindio.proyecto.backendalgoritmos.helpers.CoWordNetworkBuilder;
 import co.uniquindio.proyecto.backendalgoritmos.helpers.WordCloudProcessor;
 import co.uniquindio.proyecto.backendalgoritmos.models.DocumentsProperties;
 import co.uniquindio.proyecto.backendalgoritmos.models.WordCloudItem;
@@ -165,8 +166,6 @@ public class InformationImpl implements InformationServicio {
         return modelFront;
     }
 
-
-
 //    ! Requerimiento 3
 
     public Map<String, Object> requerimiento3_1() {
@@ -205,6 +204,25 @@ public class InformationImpl implements InformationServicio {
         abstracts = PreprocesamientoTexto.preprocesarTexto(abstracts);
 
         return WordCloudProcessor.generarWordCloudContiene(abstracts);
+    }
+
+    public Map<String, Object> requerimiento3_2() {
+        List<String> abstracts = new ArrayList<>();
+
+        String directorioActual = System.getProperty("user.dir");
+        String bibFilePath = directorioActual + "/src/main/resources/co.uniquindio.proyecto.backendalgoritmos/articulos.bib";
+        List<DocumentsProperties> articles = DocumentsExtractor.readBibFile(bibFilePath);
+
+        for (DocumentsProperties doc : articles) {
+            String abstractDescription = doc.getAbstractDescription();
+            if (abstractDescription != null && !abstractDescription.trim().isEmpty()) {
+                abstracts.add(abstractDescription.trim());
+            }
+        }
+
+        Map <String, Object> coWordNetwork = CoWordNetworkBuilder.construirCoWordNetworkMitad(abstracts, PreprocesamientoTexto.preprocesarTexto(abstracts));
+
+        return coWordNetwork;
     }
 
 //    ! Requerimiento 5
