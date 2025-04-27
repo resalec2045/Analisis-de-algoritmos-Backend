@@ -45,4 +45,18 @@ public class InformationControlador {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, informationServicio.preprocesamientoDescriptionUtiliced()));
     }
 
+//    ! Requerimiento 2
+
+    @GetMapping("/requerimiento2")
+    public ResponseEntity<MensajeDTO<List<Object>>> requerimiento2() throws Exception {
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, informationServicio.requerimiento2()));
+    }
+
+//    ! Requerimiento 3
+
+
+
+//    ! Requerimiento 5
+
+
 }

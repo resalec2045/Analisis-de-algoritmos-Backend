@@ -11,11 +11,12 @@ public class DocumentsProperties {
     private String abstractDescription;
     private int numpages;
     private String keywords;
+    private String publishers;
 
     public DocumentsProperties() {
     }
 
-    public DocumentsProperties(String keywords, String author, String title, int year, String location, String abstractDescription, int numpages) {
+    public DocumentsProperties(String keywords, String author, String title, int year, String location, String abstractDescription, int numpages, String publishers) {
         this.author = author;
         this.title = title;
         this.year = year;
@@ -23,6 +24,15 @@ public class DocumentsProperties {
         this.abstractDescription = abstractDescription;
         this.numpages = numpages;
         this.keywords = keywords;
+        this.publishers = publishers;
+    }
+
+    public String getPublishers() {
+        return publishers;
+    }
+
+    public void setPublishers(String publishers) {
+        this.publishers = publishers;
     }
 
     public String getAuthor() {

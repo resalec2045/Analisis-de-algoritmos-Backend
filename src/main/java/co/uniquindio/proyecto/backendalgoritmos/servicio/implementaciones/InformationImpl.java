@@ -2,14 +2,18 @@ package co.uniquindio.proyecto.backendalgoritmos.servicio.implementaciones;
 
 import co.uniquindio.proyecto.backendalgoritmos.helpers.Agrupamiento.DIANA.DivisiveClustering;
 import co.uniquindio.proyecto.backendalgoritmos.models.DocumentsProperties;
+import co.uniquindio.proyecto.backendalgoritmos.models.ModelSortingResults;
+import co.uniquindio.proyecto.backendalgoritmos.models.SortingResult;
 import co.uniquindio.proyecto.backendalgoritmos.modules.DocuemntsExtractor.DocumentsExtractor;
 import co.uniquindio.proyecto.backendalgoritmos.helpers.Agrupamiento.AGNES.ClusteringService;
 import co.uniquindio.proyecto.backendalgoritmos.helpers.Agrupamiento.PreprocesamientoTexto;
 import co.uniquindio.proyecto.backendalgoritmos.helpers.sorting.SortingHelper;
+import co.uniquindio.proyecto.backendalgoritmos.helpers.ChartOrganizer;
 import co.uniquindio.proyecto.backendalgoritmos.servicio.interfaces.InformationServicio;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class InformationImpl implements InformationServicio {
@@ -81,7 +85,7 @@ public class InformationImpl implements InformationServicio {
         return clusteringService.clusteringJerarquicoPalabras(palabras);
     }
 
-    //    ! Medoto para Diana
+//    ! Medoto para Diana
     @Override
     public Map<String, Object> preprocesamientoTextoDiana() {
         List<String> abstracts = new ArrayList<>();
@@ -113,6 +117,7 @@ public class InformationImpl implements InformationServicio {
         return DivisiveClustering.dividirPalabras(palabras);
     }
 
+//    ! Descripcion utiliizada
     @Override
     public String preprocesamientoDescriptionUtiliced() {
         List<String> abstracts = new ArrayList<>();
@@ -130,5 +135,73 @@ public class InformationImpl implements InformationServicio {
 
         return abstracts.get(0);
     }
+
+//    ! Requerimiento 2
+
+    public List<Object> requerimiento2() {
+        List<String> autores = new ArrayList<>();
+        List<String> publishers = new ArrayList<>();
+        List<Object> modelFront = new ArrayList<>();
+
+        String directorioActual = System.getProperty("user.dir");
+        String bibFilePath = directorioActual + "/src/main/resources/co.uniquindio.proyecto.backendalgoritmos/articulos.bib";
+        List<DocumentsProperties> articles = DocumentsExtractor.readBibFile(bibFilePath);
+
+        for (DocumentsProperties doc : articles) {
+            String abstractAutor = doc.getAuthor();
+            if (abstractAutor != null && !abstractAutor.trim().isEmpty()) {
+                autores.add(abstractAutor.trim());
+            }
+            String abstractPublishers = doc.getPublishers();
+            if (abstractPublishers != null && !abstractPublishers.trim().isEmpty()) {
+                publishers.add(abstractPublishers.trim());
+            }
+        }
+
+        modelFront.add(ChartOrganizer.organizeChartData(countOccurrences(autores, 15), "Autores", "Cantidad", "Top 15 Autores"));
+        modelFront.add(ChartOrganizer.organizeChartData(countOccurrences(publishers, 15), "Publishers", "Cantidad", "Top 15 Publishers"));
+
+
+        return modelFront;
+    }
+
+    public static Map<String, Object> countOccurrences(List<String> items, int topN) {
+        Map<String, Integer> counter = new HashMap<>();
+
+        // Contar cada ítem
+        for (String item : items) {
+            counter.put(item, counter.getOrDefault(item, 0) + 1);
+        }
+
+        // Ordenar por cantidad descendente
+        List<Map.Entry<String, Integer>> sortedEntries = new ArrayList<>(counter.entrySet());
+        sortedEntries.sort((a, b) -> b.getValue().compareTo(a.getValue()));
+
+        // Tomar solo los topN elementos
+        List<String> categories = new ArrayList<>();
+        List<Integer> series = new ArrayList<>();
+        int count = 0;
+        for (Map.Entry<String, Integer> entry : sortedEntries) {
+            if (count >= topN) break;
+            categories.add(entry.getKey());
+            series.add(entry.getValue());
+            count++;
+        }
+
+        // Empaquetar en un Map
+        Map<String, Object> result = new HashMap<>();
+        result.put("categories", categories);
+        result.put("series", series);
+        return result;
+    }
+
+//    ! Requerimiento 3
+
+
+
+//    ! Requerimiento 5
+
+
+
 
 }

@@ -15,4 +15,6 @@ public interface InformationServicio {
 
     String preprocesamientoDescriptionUtiliced() throws Exception;
 
+    List<Object> requerimiento2() throws Exception;
+
 }
