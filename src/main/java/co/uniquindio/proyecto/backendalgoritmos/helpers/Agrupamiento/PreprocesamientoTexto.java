@@ -48,5 +48,29 @@ public class PreprocesamientoTexto {
         return new ArrayList<>(palabrasUtiles);
     }
 
+    public static List<String> preprocesarTexto(List<String> textos) {
+        Set<String> palabrasUtiles = new LinkedHashSet<>(); // ⚡ Set para evitar duplicados y mantener el orden
+
+        for (String texto : textos) {
+            // 1. Convertir a minúsculas
+            texto = texto.toLowerCase();
+
+            // 2. Eliminar caracteres que no sean letras ni espacios
+            texto = texto.replaceAll("[^a-z\\s]", "");
+
+            // 3. Dividir en palabras (tokenizar)
+            String[] tokens = texto.split("\\s+");
+
+            // 4. Eliminar stopwords, palabras menores a 4 letras y duplicados
+            for (String token : tokens) {
+                if (!STOPWORDS.contains(token) && !token.isEmpty() && token.length() >= 4) {
+                    palabrasUtiles.add(token);
+                }
+            }
+        }
+
+        return new ArrayList<>(palabrasUtiles);
+    }
+
 
 }

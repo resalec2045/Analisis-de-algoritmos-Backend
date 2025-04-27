@@ -1,5 +1,7 @@
 package co.uniquindio.proyecto.backendalgoritmos.servicio.interfaces;
 
+import co.uniquindio.proyecto.backendalgoritmos.models.WordCloudItem;
+
 import java.util.List;
 import java.util.Map;
 
@@ -16,5 +18,9 @@ public interface InformationServicio {
     String preprocesamientoDescriptionUtiliced() throws Exception;
 
     List<Object> requerimiento2() throws Exception;
+
+    Map<String, Object> requerimiento3_1() throws Exception;
+
+    List<WordCloudItem> requerimiento3() throws Exception;
 
 }

@@ -1,9 +1,10 @@
 package co.uniquindio.proyecto.backendalgoritmos.servicio.implementaciones;
 
+import co.uniquindio.proyecto.backendalgoritmos.helpers.AbstractAnalyzer;
 import co.uniquindio.proyecto.backendalgoritmos.helpers.Agrupamiento.DIANA.DivisiveClustering;
+import co.uniquindio.proyecto.backendalgoritmos.helpers.WordCloudProcessor;
 import co.uniquindio.proyecto.backendalgoritmos.models.DocumentsProperties;
-import co.uniquindio.proyecto.backendalgoritmos.models.ModelSortingResults;
-import co.uniquindio.proyecto.backendalgoritmos.models.SortingResult;
+import co.uniquindio.proyecto.backendalgoritmos.models.WordCloudItem;
 import co.uniquindio.proyecto.backendalgoritmos.modules.DocuemntsExtractor.DocumentsExtractor;
 import co.uniquindio.proyecto.backendalgoritmos.helpers.Agrupamiento.AGNES.ClusteringService;
 import co.uniquindio.proyecto.backendalgoritmos.helpers.Agrupamiento.PreprocesamientoTexto;
@@ -13,7 +14,6 @@ import co.uniquindio.proyecto.backendalgoritmos.servicio.interfaces.InformationS
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class InformationImpl implements InformationServicio {
@@ -165,6 +165,54 @@ public class InformationImpl implements InformationServicio {
         return modelFront;
     }
 
+
+
+//    ! Requerimiento 3
+
+    public Map<String, Object> requerimiento3_1() {
+        List<String> abstracts = new ArrayList<>();
+
+        String directorioActual = System.getProperty("user.dir");
+        String bibFilePath = directorioActual + "/src/main/resources/co.uniquindio.proyecto.backendalgoritmos/articulos.bib";
+        List<DocumentsProperties> articles = DocumentsExtractor.readBibFile(bibFilePath);
+
+        for (DocumentsProperties doc : articles) {
+            String abstractDescription = doc.getAbstractDescription();
+            if (abstractDescription != null && !abstractDescription.trim().isEmpty()) {
+                abstracts.add(abstractDescription.trim());
+            }
+        }
+
+        abstracts = PreprocesamientoTexto.preprocesarTexto(abstracts);
+
+        return AbstractAnalyzer.analizarAbstracts(abstracts);
+    }
+
+    public List<WordCloudItem> requerimiento3() {
+        List<String> abstracts = new ArrayList<>();
+
+        String directorioActual = System.getProperty("user.dir");
+        String bibFilePath = directorioActual + "/src/main/resources/co.uniquindio.proyecto.backendalgoritmos/articulos.bib";
+        List<DocumentsProperties> articles = DocumentsExtractor.readBibFile(bibFilePath);
+
+        for (DocumentsProperties doc : articles) {
+            String abstractDescription = doc.getAbstractDescription();
+            if (abstractDescription != null && !abstractDescription.trim().isEmpty()) {
+                abstracts.add(abstractDescription.trim());
+            }
+        }
+
+        abstracts = PreprocesamientoTexto.preprocesarTexto(abstracts);
+
+        return WordCloudProcessor.generarWordCloudContiene(abstracts);
+    }
+
+//    ! Requerimiento 5
+
+
+
+//    !METODOS
+
     public static Map<String, Object> countOccurrences(List<String> items, int topN) {
         Map<String, Integer> counter = new HashMap<>();
 
@@ -194,14 +242,5 @@ public class InformationImpl implements InformationServicio {
         result.put("series", series);
         return result;
     }
-
-//    ! Requerimiento 3
-
-
-
-//    ! Requerimiento 5
-
-
-
 
 }

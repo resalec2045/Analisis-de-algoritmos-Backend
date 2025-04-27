@@ -1,6 +1,7 @@
 package co.uniquindio.proyecto.backendalgoritmos.controlador;
 
 import co.uniquindio.proyecto.backendalgoritmos.dto.MensajeDTO;
+import co.uniquindio.proyecto.backendalgoritmos.models.WordCloudItem;
 import co.uniquindio.proyecto.backendalgoritmos.servicio.interfaces.InformationServicio;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -54,9 +55,16 @@ public class InformationControlador {
 
 //    ! Requerimiento 3
 
+    @GetMapping("/requerimiento3_1")
+    public ResponseEntity<MensajeDTO<Map<String, Object>>> requerimiento3_1() throws Exception {
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, informationServicio.requerimiento3_1()));
+    }
 
+    @GetMapping("/requerimiento3")
+    public ResponseEntity<MensajeDTO<List<WordCloudItem>>> requerimiento3() throws Exception {
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, informationServicio.requerimiento3()));
+    }
 
 //    ! Requerimiento 5
-
 
 }

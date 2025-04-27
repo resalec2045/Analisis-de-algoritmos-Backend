@@ -20,4 +20,5 @@ public class ChartOrganizer {
 
         return chartData;
     }
+
 }
