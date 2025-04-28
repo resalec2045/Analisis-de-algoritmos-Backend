@@ -12,56 +12,66 @@ import java.util.regex.Pattern; // Importa la clase Pattern que permite compilar
 
 public class DocumentsExtractor { // Definición de la clase DocumentsExtractor
 
-    public static List<DocumentsProperties> readBibFile(String bibFilePath) { // Método estático para leer el archivo BibTeX desde la ruta proporcionada
-        List<DocumentsProperties> articles = new ArrayList<>(); // Crea una lista de objetos DocumentsProperties para almacenar los artículos extraídos
+    public static List<DocumentsProperties> readBibFile(String bibFilePath) {
+        List<DocumentsProperties> articles = new ArrayList<>();
+        String currentType = null; // Nuevo: para almacenar el tipo de documento actual
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(bibFilePath))) { // Usa BufferedReader para leer el archivo línea por línea
-            String line; // Variable para almacenar cada línea leída
-            StringBuilder articleContent = new StringBuilder(); // StringBuilder para almacenar el contenido de cada artículo
+        try (BufferedReader reader = new BufferedReader(new FileReader(bibFilePath))) {
+            String line;
+            StringBuilder articleContent = new StringBuilder();
 
-            while ((line = reader.readLine()) != null) { // Lee cada línea del archivo mientras haya contenido
-                line = line.trim(); // Elimina espacios en blanco al principio y al final de la línea
-                if (line.startsWith("@article")) { // Si la línea empieza con "@article", indica el inicio de un artículo
-                    if (articleContent.length() > 0) { // Si ya había contenido en articleContent, procesa el artículo anterior
-                        DocumentsProperties article = parseArticle(articleContent.toString()); // Llama a parseArticle para procesar el contenido del artículo
-                        if (article != null) { // Si el artículo es válido, lo agrega a la lista
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                if (line.startsWith("@")) { // Generaliza para cualquier tipo de entrada: @article, @inproceedings, @book, etc.
+                    if (articleContent.length() > 0) {
+                        DocumentsProperties article = parseArticle(articleContent.toString(), currentType); // Pasa el tipo al parser
+                        if (article != null) {
                             articles.add(article);
                         }
                     }
-                    articleContent.setLength(0); // Resetea el StringBuilder para comenzar con el nuevo artículo
-                    articleContent.append(line).append("\n"); // Agrega la línea actual al contenido del artículo
+                    articleContent.setLength(0);
+                    articleContent.append(line).append("\n");
+
+                    // Extrae el tipo del documento (ej. "article" de "@article{...") y lo guarda
+                    int braceIndex = line.indexOf("{");
+                    if (braceIndex > 1) {
+                        currentType = line.substring(1, braceIndex).toLowerCase(); // Guarda "article", "inproceedings", etc.
+                    }
                 } else {
-                    articleContent.append(line).append("\n"); // Si la línea no es el inicio de un artículo, agrega la línea al contenido del artículo
+                    articleContent.append(line).append("\n");
                 }
             }
 
-            if (articleContent.length() > 0) { // Después de leer todas las líneas, si queda contenido en articleContent, lo procesa
-                DocumentsProperties article = parseArticle(articleContent.toString()); // Procesa el último artículo
-                if (article != null) { // Si es válido, lo agrega a la lista
+            if (articleContent.length() > 0) {
+                DocumentsProperties article = parseArticle(articleContent.toString(), currentType); // Pasa el tipo del último artículo
+                if (article != null) {
                     articles.add(article);
                 }
             }
 
-        } catch (IOException e) { // Maneja las excepciones de entrada/salida
-            e.printStackTrace(); // Imprime la traza de la excepción
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        return articles; // Devuelve la lista de artículos extraídos
+        return articles;
     }
 
-    private static DocumentsProperties parseArticle(String articleContent) { // Método privado para procesar el contenido de un artículo y extraer sus propiedades
-        DocumentsProperties article = new DocumentsProperties(); // Crea un nuevo objeto DocumentsProperties para almacenar las propiedades del artículo
-
-        article.setAuthor(extractAttribute(articleContent, "author")); // Extrae el autor del artículo
-        article.setTitle(extractAttribute(articleContent, "title")); // Extrae el título del artículo
-        article.setYear(extractYear(articleContent)); // Extrae el año del artículo
-        article.setLocation(extractAttribute(articleContent, "location")); // Extrae la ubicación del artículo
-        article.setPublishers(extractAttribute(articleContent, "publisher")); // Extrae la ubicación del artículo
+    private static DocumentsProperties parseArticle(String articleContent, String typeDocument) {
+        DocumentsProperties article = new DocumentsProperties();
+        article.setTypeDocument(typeDocument);
+        article.setAuthor(extractAttribute(articleContent, "author"));
+        article.setTitle(extractAttribute(articleContent, "title"));
+        article.setYear(extractYear(articleContent));
+        article.setLocation(extractAttribute(articleContent, "location"));
+        article.setPublishers(extractAttribute(articleContent, "publisher"));
         article.setKeywords(extractAttribute(articleContent, "keywords"));
-        article.setNumpages(extractPages(articleContent)); // Extrae
-        article.setAbstractDescription(extractAttribute(articleContent, "abstract")); // Extrae el resumen del artículo
-        return article; // Devuelve el artículo con las propiedades extraídas
+        article.setNumpages(extractPages(articleContent));
+        article.setAbstractDescription(extractAttribute(articleContent, "abstract"));
+        article.setJournal(extractAttribute(articleContent, "journal"));
+
+        return article;
     }
+
 
     private static String extractAttribute(String articleContent, String attributeName) { // Método privado para extraer un atributo específico de un artículo dado su nombre
         String regex = attributeName + "\\s*=\\s*\\{(.*?)\\}"; // Crea una expresión regular para encontrar el atributo en el formato "attributeName = {value}"

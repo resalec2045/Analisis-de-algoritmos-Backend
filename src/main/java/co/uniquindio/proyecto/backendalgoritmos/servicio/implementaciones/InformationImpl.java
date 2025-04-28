@@ -142,6 +142,7 @@ public class InformationImpl implements InformationServicio {
     public List<Object> requerimiento2() {
         List<String> autores = new ArrayList<>();
         List<String> publishers = new ArrayList<>();
+        List<String> journals = new ArrayList<>();
         List<Object> modelFront = new ArrayList<>();
 
         String directorioActual = System.getProperty("user.dir");
@@ -157,9 +158,14 @@ public class InformationImpl implements InformationServicio {
             if (abstractPublishers != null && !abstractPublishers.trim().isEmpty()) {
                 publishers.add(abstractPublishers.trim());
             }
+            String abstractJournal = doc.getJournal();
+            if (abstractJournal != null && !abstractJournal.trim().isEmpty()) {
+                journals.add(abstractJournal.trim());
+            }
         }
 
         modelFront.add(ChartOrganizer.organizeChartData(countOccurrences(autores, 15), "Autores", "Cantidad", "Top 15 Autores"));
+        modelFront.add(ChartOrganizer.organizeChartData(countOccurrences(journals, 15), "Journals", "Cantidad", "Top 15 Journals"));
         modelFront.add(ChartOrganizer.organizeChartData(countOccurrences(publishers, 15), "Publishers", "Cantidad", "Top 15 Publishers"));
 
 

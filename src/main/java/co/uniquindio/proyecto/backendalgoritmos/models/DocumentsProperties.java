@@ -12,11 +12,13 @@ public class DocumentsProperties {
     private int numpages;
     private String keywords;
     private String publishers;
+    private String journal;
+    private String typeDocument;
 
     public DocumentsProperties() {
     }
 
-    public DocumentsProperties(String keywords, String author, String title, int year, String location, String abstractDescription, int numpages, String publishers) {
+    public DocumentsProperties(String keywords, String author, String title, int year, String location, String abstractDescription, int numpages, String publishers, String journal, String typeDocument) {
         this.author = author;
         this.title = title;
         this.year = year;
@@ -25,6 +27,8 @@ public class DocumentsProperties {
         this.numpages = numpages;
         this.keywords = keywords;
         this.publishers = publishers;
+        this.journal = journal;
+        this.typeDocument = typeDocument;
     }
 
     public String getPublishers() {
@@ -91,6 +95,23 @@ public class DocumentsProperties {
         this.keywords = keywords;
     }
 
+    public String getJournal() {
+        return journal;
+    }
+
+    public void setJournal(String journal) {
+        this.journal = journal;
+    }
+
+
+    public String getTypeDocument() {
+        return typeDocument;
+    }
+
+    public void setTypeDocument(String typeDocument) {
+        this.typeDocument = typeDocument;
+    }
+
     @Override
     public String toString() {
         return "DocumentsProperties{" +
@@ -100,6 +121,10 @@ public class DocumentsProperties {
                 ", location='" + location + '\'' +
                 ", abstractDescription='" + abstractDescription + '\'' +
                 ", numpages=" + numpages +
+                ", keywords='" + keywords + '\'' +
+                ", publishers='" + publishers + '\'' +
+                ", journal='" + journal + '\'' +
+                ", typeDocument='" + typeDocument + '\'' +
                 '}';
     }
 
@@ -107,11 +132,11 @@ public class DocumentsProperties {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         DocumentsProperties that = (DocumentsProperties) o;
-        return year == that.year && numpages == that.numpages && Objects.equals(author, that.author) && Objects.equals(title, that.title) && Objects.equals(location, that.location) && Objects.equals(abstractDescription, that.abstractDescription);
+        return year == that.year && numpages == that.numpages && Objects.equals(author, that.author) && Objects.equals(title, that.title) && Objects.equals(location, that.location) && Objects.equals(abstractDescription, that.abstractDescription) && Objects.equals(keywords, that.keywords) && Objects.equals(publishers, that.publishers) && Objects.equals(journal, that.journal) && Objects.equals(typeDocument, that.typeDocument);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(author, title, year, location, abstractDescription, numpages);
+        return Objects.hash(author, title, year, location, abstractDescription, numpages, keywords, publishers, journal, typeDocument);
     }
 }
