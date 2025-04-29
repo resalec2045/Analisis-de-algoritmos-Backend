@@ -81,7 +81,7 @@
             <version>1.2.0</version>
         </dependency>
 
-		<!--	Dependencias machine learning	-->
+		<!--	Dependencias machine learning https://github.com/haifengl/smile	-->
 
         <dependency>
             <groupId>com.github.haifengl</groupId>
