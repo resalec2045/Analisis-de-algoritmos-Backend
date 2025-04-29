@@ -1,6 +1,7 @@
 package co.uniquindio.proyecto.backendalgoritmos.servicio.implementaciones;
 
 import co.uniquindio.proyecto.backendalgoritmos.helpers.AbstractAnalyzer;
+import co.uniquindio.proyecto.backendalgoritmos.helpers.Agrupamiento.AGNES.ClusteringServiceSmile;
 import co.uniquindio.proyecto.backendalgoritmos.helpers.Agrupamiento.DIANA.DivisiveClustering;
 import co.uniquindio.proyecto.backendalgoritmos.helpers.CoWordNetworkBuilder;
 import co.uniquindio.proyecto.backendalgoritmos.helpers.WordCloudProcessor;
@@ -20,6 +21,7 @@ import java.util.*;
 public class InformationImpl implements InformationServicio {
 
     private final ClusteringService clusteringService = new ClusteringService();
+    private final ClusteringServiceSmile clusteringServiceSmile = new ClusteringServiceSmile();
 
     @Override
     public List<Object> getInformation() {
@@ -83,7 +85,8 @@ public class InformationImpl implements InformationServicio {
         String selectedAbstract = abstracts.get(0);
         List<String> palabras = PreprocesamientoTexto.preprocesarTexto(selectedAbstract);
 
-        return clusteringService.clusteringJerarquicoPalabras(palabras);
+//        return clusteringService.clusteringJerarquicoPalabras(palabras);
+        return clusteringServiceSmile.convertirClusterAJson(clusteringServiceSmile.clusterizarPalabras(palabras));
     }
 
 //    ! Medoto para Diana
@@ -143,6 +146,7 @@ public class InformationImpl implements InformationServicio {
         List<String> autores = new ArrayList<>();
         List<String> publishers = new ArrayList<>();
         List<String> journals = new ArrayList<>();
+        List<String> typeProduct = new ArrayList<>();
         List<Object> modelFront = new ArrayList<>();
 
         String directorioActual = System.getProperty("user.dir");
@@ -162,11 +166,16 @@ public class InformationImpl implements InformationServicio {
             if (abstractJournal != null && !abstractJournal.trim().isEmpty()) {
                 journals.add(abstractJournal.trim());
             }
+            String type = doc.getTypeDocument();
+            if (type != null && !type.trim().isEmpty()) {
+                typeProduct.add(type.trim());
+            }
         }
 
         modelFront.add(ChartOrganizer.organizeChartData(countOccurrences(autores, 15), "Autores", "Cantidad", "Top 15 Autores"));
         modelFront.add(ChartOrganizer.organizeChartData(countOccurrences(journals, 15), "Journals", "Cantidad", "Top 15 Journals"));
         modelFront.add(ChartOrganizer.organizeChartData(countOccurrences(publishers, 15), "Publishers", "Cantidad", "Top 15 Publishers"));
+        modelFront.add(ChartOrganizer.organizeChartData(countOccurrences(typeProduct, 15), "Tipos documentos", "Cantidad", "Documentos"));
 
 
         return modelFront;
