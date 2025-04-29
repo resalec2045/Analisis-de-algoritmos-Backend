@@ -3,6 +3,7 @@ package co.uniquindio.proyecto.backendalgoritmos.servicio.implementaciones;
 import co.uniquindio.proyecto.backendalgoritmos.helpers.AbstractAnalyzer;
 import co.uniquindio.proyecto.backendalgoritmos.helpers.Agrupamiento.AGNES.ClusteringServiceSmile;
 import co.uniquindio.proyecto.backendalgoritmos.helpers.Agrupamiento.DIANA.DivisiveClustering;
+import co.uniquindio.proyecto.backendalgoritmos.helpers.Agrupamiento.DIANA.DivisiveClusteringSmile;
 import co.uniquindio.proyecto.backendalgoritmos.helpers.CoWordNetworkBuilder;
 import co.uniquindio.proyecto.backendalgoritmos.helpers.WordCloudProcessor;
 import co.uniquindio.proyecto.backendalgoritmos.models.DocumentsProperties;
@@ -118,7 +119,8 @@ public class InformationImpl implements InformationServicio {
         List<String> palabras = PreprocesamientoTexto.preprocesarTexto(selectedAbstract);
 
         // 6. Aplicar DIANA: clustering divisivo
-        return DivisiveClustering.dividirPalabras(palabras);
+//        return DivisiveClustering.dividirPalabras(palabras);
+        return DivisiveClusteringSmile.clusteringDivisivoJson(palabras);
     }
 
 //    ! Descripcion utiliizada
