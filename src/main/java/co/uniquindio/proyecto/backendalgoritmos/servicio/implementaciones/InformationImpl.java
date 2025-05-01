@@ -4,6 +4,9 @@ import co.uniquindio.proyecto.backendalgoritmos.helpers.AbstractAnalyzer;
 import co.uniquindio.proyecto.backendalgoritmos.helpers.Agrupamiento.AGNES.ClusteringServiceSmile;
 import co.uniquindio.proyecto.backendalgoritmos.helpers.Agrupamiento.DIANA.DivisiveClustering;
 import co.uniquindio.proyecto.backendalgoritmos.helpers.Agrupamiento.DIANA.DivisiveClusteringSmile;
+import co.uniquindio.proyecto.backendalgoritmos.helpers.Agrupamiento.TextSimilarity;
+import co.uniquindio.proyecto.backendalgoritmos.helpers.Agrupamiento.requisito5.AgrupadorManual;
+import co.uniquindio.proyecto.backendalgoritmos.helpers.Agrupamiento.requisito5.TextSimilarityGrouper;
 import co.uniquindio.proyecto.backendalgoritmos.helpers.CoWordNetworkBuilder;
 import co.uniquindio.proyecto.backendalgoritmos.helpers.WordCloudProcessor;
 import co.uniquindio.proyecto.backendalgoritmos.models.DocumentsProperties;
@@ -81,7 +84,7 @@ public class InformationImpl implements InformationServicio {
             throw new IllegalArgumentException("Se requiere al menos un abstract.");
         }
 
-        Random random = new Random();
+//        Random random = new Random();
 //        String selectedAbstract = abstracts.get(random.nextInt(abstracts.size()));
         String selectedAbstract = abstracts.get(0);
         List<String> palabras = PreprocesamientoTexto.preprocesarTexto(selectedAbstract);
@@ -113,7 +116,7 @@ public class InformationImpl implements InformationServicio {
             throw new IllegalArgumentException("Se requiere al menos un abstract para clustering divisivo.");
         }
 
-        Random random = new Random();
+//        Random random = new Random();
 //        String selectedAbstract = abstracts.get(random.nextInt(abstracts.size()));
         String selectedAbstract = abstracts.get(0);
         List<String> palabras = PreprocesamientoTexto.preprocesarTexto(selectedAbstract);
@@ -139,7 +142,7 @@ public class InformationImpl implements InformationServicio {
             }
         }
 
-        return abstracts.get(0);
+        return abstracts.get(0) + "+_+" + abstracts.get(1) + "+_+" + TextSimilarity.cosineSimilarity(abstracts.get(0), abstracts.get(1));
     }
 
 //    ! Requerimiento 2
@@ -223,6 +226,25 @@ public class InformationImpl implements InformationServicio {
         return WordCloudProcessor.generarWordCloudContiene(abstracts);
     }
 
+    public Map<String, List<WordCloudItem>> requerimiento3PorCategoria() {
+        List<String> abstracts = new ArrayList<>();
+
+        String directorioActual = System.getProperty("user.dir");
+        String bibFilePath = directorioActual + "/src/main/resources/co.uniquindio.proyecto.backendalgoritmos/articulos.bib";
+        List<DocumentsProperties> articles = DocumentsExtractor.readBibFile(bibFilePath);
+
+        for (DocumentsProperties doc : articles) {
+            String abstractDescription = doc.getAbstractDescription();
+            if (abstractDescription != null && !abstractDescription.trim().isEmpty()) {
+                abstracts.add(abstractDescription.trim());
+            }
+        }
+
+        abstracts = PreprocesamientoTexto.preprocesarTexto(abstracts);
+
+        return WordCloudProcessor.generarWordCloudPorCategoria(abstracts);
+    }
+
     public Map<String, Object> requerimiento3_2() {
         List<String> abstracts = new ArrayList<>();
 
@@ -244,7 +266,33 @@ public class InformationImpl implements InformationServicio {
 
 //    ! Requerimiento 5
 
+    public Map<String, Object> requerimiento5() {
+        List<String> abstracts = new ArrayList<>();
 
+        String directorioActual = System.getProperty("user.dir");
+        String bibFilePath = directorioActual + "/src/main/resources/co.uniquindio.proyecto.backendalgoritmos/articulos.bib";
+        List<DocumentsProperties> articles = DocumentsExtractor.readBibFile(bibFilePath);
+
+        for (DocumentsProperties doc : articles) {
+            String abstractDescription = doc.getAbstractDescription();
+            if (abstractDescription != null && !abstractDescription.trim().isEmpty()) {
+                abstracts.add(abstractDescription.trim());
+            }
+        }
+
+        int limite = Math.max(1, abstracts.size() / 50);
+        List<String> sublista = abstracts.subList(0, limite);
+
+        Map<String, List<List<String>>> jaccard = TextSimilarityGrouper.agruparPorJaccard(sublista, 0.5);
+        Map<String, List<List<String>>> TFIDF = AgrupadorManual.agruparPorTFIDFManual(sublista, 5, 10);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("Jaccard", jaccard);
+        result.put("TFIDF", TFIDF);
+
+        return result;
+
+    }
 
 //    !METODOS
 

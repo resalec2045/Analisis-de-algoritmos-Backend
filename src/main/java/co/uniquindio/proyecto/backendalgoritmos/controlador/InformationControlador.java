@@ -65,6 +65,11 @@ public class InformationControlador {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, informationServicio.requerimiento3()));
     }
 
+    @GetMapping("/requerimiento3PorCategoria")
+    public ResponseEntity<MensajeDTO<Map<String, List<WordCloudItem>>>> requerimiento3PorCategoria() throws Exception {
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, informationServicio.requerimiento3PorCategoria()));
+    }
+
     @GetMapping("/requerimiento3_2")
     public ResponseEntity<MensajeDTO<Map<String, Object>>> requerimiento3_2() throws Exception {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, informationServicio.requerimiento3_2()));
@@ -72,4 +77,10 @@ public class InformationControlador {
 
 //    ! Requerimiento 5
 
+    @GetMapping("/requerimiento5")
+    public ResponseEntity<MensajeDTO<Map<String, Object>>> requerimiento5() throws Exception {
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, informationServicio.requerimiento5()));
+    }
+
 }
+

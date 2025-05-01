@@ -15,10 +15,14 @@ public class ClusteringServiceSmile {
     // Mapa de relaciones semánticas: palabra -> conjunto de palabras relacionadas
     private static final Map<String, List<String>> RELACIONES_SEMANTICAS = new HashMap<>();
     static {
-        // Ejemplo de carga de relaciones semánticas (sinónimos o términos relacionados)
-        // RELACIONES_SEMANTICAS.put("rápido", Arrays.asList("veloz", "ligero"));
-        // RELACIONES_SEMANTICAS.put("coche", Arrays.asList("auto", "automóvil"));
-        // ... (otros pares de palabras relacionadas)
+        RELACIONES_SEMANTICAS.put("learn", List.of("study", "education"));
+        RELACIONES_SEMANTICAS.put("study", List.of("learn", "education"));
+        RELACIONES_SEMANTICAS.put("education", List.of("learn", "study", "teaching"));
+        RELACIONES_SEMANTICAS.put("computational", List.of("computing", "computation"));
+        RELACIONES_SEMANTICAS.put("computing", List.of("computational", "computation"));
+        RELACIONES_SEMANTICAS.put("computation", List.of("computing", "computational"));
+        RELACIONES_SEMANTICAS.put("teach", List.of("education", "teaching"));
+        RELACIONES_SEMANTICAS.put("teaching", List.of("teach", "education"));
     }
 
     /**
@@ -107,8 +111,8 @@ public class ClusteringServiceSmile {
     }
 
     /**
-     * Verifica si existe suficiente diferencia entre los vectores de palabras 
-     * para justificar el clustering. Si todos los vectores son iguales o muy similares, 
+     * Verifica si existe suficiente diferencia entre los vectores de palabras
+     * para justificar el clustering. Si todos los vectores son iguales o muy similares,
      * devuelve false.
      */
     private boolean tieneDiferenciasSuficientes(double[][] vectores) {

@@ -23,6 +23,10 @@ public interface InformationServicio {
 
     List<WordCloudItem> requerimiento3() throws Exception;
 
+    Map<String, List<WordCloudItem>> requerimiento3PorCategoria() throws Exception;
+
     Map<String, Object> requerimiento3_2() throws Exception;
+
+    Map<String, Object> requerimiento5() throws Exception;
 
 }
