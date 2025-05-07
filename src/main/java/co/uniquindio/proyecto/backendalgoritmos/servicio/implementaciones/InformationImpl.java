@@ -87,7 +87,10 @@ public class InformationImpl implements InformationServicio {
 
 //        Random random = new Random();
 //        String selectedAbstract = abstracts.get(random.nextInt(abstracts.size()));
-        String selectedAbstract = abstracts.get(0);
+
+//        String selectedAbstract = abstracts.get(0);
+
+        String selectedAbstract = "We applied the AGNES algorithm, implemented in Java with SMILE, to hierarchically cluster semantically related words extracted from scientific abstracts. After preprocessing the text to retain only meaningful terms, each word was vectorized and grouped based on their Euclidean distances. The resulting dendrogram highlights lexical relationships, allowing intuitive exploration of abstract content.";
         List<String> palabras = PreprocesamientoTexto.preprocesarTexto(selectedAbstract);
 
 //        return clusteringService.clusteringJerarquicoPalabras(palabras);
@@ -119,6 +122,7 @@ public class InformationImpl implements InformationServicio {
 
 //        Random random = new Random();
 //        String selectedAbstract = abstracts.get(random.nextInt(abstracts.size()));
+
 //        String selectedAbstract = abstracts.get(0);
         String selectedAbstract = "We applied the DIANA algorithm, implemented in Java with SMILE, to hierarchically cluster semantically related words extracted from scientific abstracts. After preprocessing the text to retain only meaningful terms, each word was vectorized and grouped based on their Euclidean distances. The resulting dendrogram highlights lexical relationships, allowing intuitive exploration of abstract content.";
         List<String> palabras = PreprocesamientoTexto.preprocesarTexto(selectedAbstract);
