@@ -58,7 +58,6 @@ public class CoWordNetworkBuilder {
                 }
             }
         }
-
         // 🧠 Nuevo: Limitar a 2 relaciones por palabra
         Map<Integer, Integer> conexionesPorNodo = new HashMap<>();
 
