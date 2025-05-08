@@ -14,20 +14,16 @@ public class CoWordNetworkBuilder {
             return resultado;
         }
 
-        // ⚡ Usamos solo la mitad de las palabras
-//        TODO: Cambiar el tamaño de la lista de palabras a la mitad :v
+        // Tomamos solo una fracción de las palabras
         int mitad = palabras.size() / 500;
         List<String> palabrasUsadas = palabras.subList(0, mitad);
 
         Map<String, Integer> palabraToId = new HashMap<>();
         int idCounter = 1;
-
-        // Asignamos un ID a cada palabra usada
         for (String palabra : palabrasUsadas) {
             palabraToId.put(palabra, idCounter++);
         }
 
-        // Creamos los nodos
         for (String palabra : palabraToId.keySet()) {
             Map<String, Object> node = new HashMap<>();
             node.put("id", palabraToId.get(palabra));
@@ -35,10 +31,8 @@ public class CoWordNetworkBuilder {
             nodes.add(node);
         }
 
-        // ⚡ Mapa para contar conexiones únicas
         Map<String, Integer> edgeCounter = new HashMap<>();
 
-        // Ahora, procesamos abstract por abstract
         for (String abstracto : abstracts) {
             Set<String> palabrasEnAbstract = new HashSet<>();
             String abstractLower = abstracto.toLowerCase();
@@ -59,20 +53,32 @@ public class CoWordNetworkBuilder {
                     int idA = palabraToId.get(palabraA);
                     int idB = palabraToId.get(palabraB);
 
-                    String key = idA < idB ? idA + "-" + idB : idB + "-" + idA; // evitar duplicados
-
+                    String key = idA < idB ? idA + "-" + idB : idB + "-" + idA;
                     edgeCounter.put(key, edgeCounter.getOrDefault(key, 0) + 1);
                 }
             }
         }
 
-        // Construimos las edges
+        // 🧠 Nuevo: Limitar a 2 relaciones por palabra
+        Map<Integer, Integer> conexionesPorNodo = new HashMap<>();
+
         for (String key : edgeCounter.keySet()) {
             String[] ids = key.split("-");
-            Map<String, Object> edge = new HashMap<>();
-            edge.put("from", Integer.parseInt(ids[0]));
-            edge.put("to", Integer.parseInt(ids[1]));
-            edges.add(edge);
+            int from = Integer.parseInt(ids[0]);
+            int to = Integer.parseInt(ids[1]);
+
+            int countFrom = conexionesPorNodo.getOrDefault(from, 0);
+            int countTo = conexionesPorNodo.getOrDefault(to, 0);
+
+            if (countFrom < 4 && countTo < 4) {
+                Map<String, Object> edge = new HashMap<>();
+                edge.put("from", from);
+                edge.put("to", to);
+                edges.add(edge);
+
+                conexionesPorNodo.put(from, countFrom + 1);
+                conexionesPorNodo.put(to, countTo + 1);
+            }
         }
 
         resultado.put("nodes", nodes);
@@ -80,4 +86,6 @@ public class CoWordNetworkBuilder {
 
         return resultado;
     }
+
+
 }
