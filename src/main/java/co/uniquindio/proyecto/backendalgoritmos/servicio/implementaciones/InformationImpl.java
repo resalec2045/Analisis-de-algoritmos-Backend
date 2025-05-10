@@ -2,6 +2,7 @@ package co.uniquindio.proyecto.backendalgoritmos.servicio.implementaciones;
 
 import co.uniquindio.proyecto.backendalgoritmos.helpers.AbstractAnalyzer;
 import co.uniquindio.proyecto.backendalgoritmos.helpers.Agrupamiento.AGNES.ClusteringServiceSmile;
+import co.uniquindio.proyecto.backendalgoritmos.helpers.Agrupamiento.ComparadorDeSimilitud;
 import co.uniquindio.proyecto.backendalgoritmos.helpers.Agrupamiento.DIANA.DivisiveClustering;
 import co.uniquindio.proyecto.backendalgoritmos.helpers.Agrupamiento.DIANA.DivisiveClusteringSmile;
 import co.uniquindio.proyecto.backendalgoritmos.helpers.Agrupamiento.TextSimilarity;
@@ -274,32 +275,91 @@ public class InformationImpl implements InformationServicio {
 //    ! Requerimiento 5
 
     public Map<String, Object> requerimiento5() {
-        List<String> abstracts = new ArrayList<>();
+        Map<String, Object> resultado = new LinkedHashMap<>();
 
+        List<String> abstracts = new ArrayList<>();
         String directorioActual = System.getProperty("user.dir");
         String bibFilePath = directorioActual + "/src/main/resources/co.uniquindio.proyecto.backendalgoritmos/articulos.bib";
+
         List<DocumentsProperties> articles = DocumentsExtractor.readBibFile(bibFilePath);
 
         for (DocumentsProperties doc : articles) {
-            String abstractDescription = doc.getAbstractDescription();
-            if (abstractDescription != null && !abstractDescription.trim().isEmpty()) {
-                abstracts.add(abstractDescription.trim());
+            String abs = doc.getAbstractDescription();
+            if (abs != null && !abs.trim().isEmpty()) {
+                abstracts.add(abs.trim());
             }
         }
 
-        int limite = Math.max(1, abstracts.size() / 50);
-        List<String> sublista = abstracts.subList(0, limite);
+        int limite = Math.max(1, abstracts.size() / 50); // Puedes ajustar esto según tus necesidades
+        List<String> sublista = abstracts.subList(0, Math.min(limite, abstracts.size()));
 
-        Map<String, List<List<String>>> jaccard = TextSimilarityGrouper.agruparPorJaccard(sublista, 0.5);
-        Map<String, List<List<String>>> TFIDF = AgrupadorManual.agruparPorTFIDFManual(sublista, 5, 10);
+        // Crear tabla de comparaciones
+        List<String> comparaciones = new ArrayList<>();
+        for (int i = 0; i < sublista.size(); i++) {
+            for (int j = i + 1; j < sublista.size(); j++) {
+                String a1 = sublista.get(i);
+                String a2 = sublista.get(j);
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("Jaccard", jaccard);
-        result.put("TFIDF", TFIDF);
+                double jaccard = TextSimilarityGrouper.jaccardSimilarity(a1, a2) * 100.0;
+                double tfidf = calcularSimilitudTFIDF(a1, a2, sublista);
 
-        return result;
+                // Corta los abstracts largos para que no se vea tan extenso
+                String resumen1 = a1.length() > 150 ? a1.substring(0, 150) + "..." : a1;
+                String resumen2 = a2.length() > 150 ? a2.substring(0, 150) + "..." : a2;
 
+                String linea = String.format(
+                        "Comparación:\n- A: \"%s\"\n- B: \"%s\"\n→ Jaccard: %.2f%% | TF-IDF: %.2f%%\n",
+                        resumen1, resumen2, jaccard, tfidf
+                );
+
+                comparaciones.add(linea);
+            }
+        }
+
+        resultado.put("Comparaciones", comparaciones);
+        return resultado;
     }
+
+    private double calcularSimilitudTFIDF(String doc1, String doc2, List<String> corpus) {
+        Set<String> vocab = new HashSet<>();
+        List<String> tokens1 = Arrays.asList(doc1.toLowerCase().split("\\W+"));
+        List<String> tokens2 = Arrays.asList(doc2.toLowerCase().split("\\W+"));
+        List<List<String>> docsTokenizados = new ArrayList<>();
+
+        for (String doc : corpus) {
+            List<String> tokens = Arrays.asList(doc.toLowerCase().split("\\W+"));
+            docsTokenizados.add(tokens);
+            vocab.addAll(tokens);
+        }
+
+        List<String> vocabulario = new ArrayList<>(vocab);
+        int N = corpus.size();
+        Map<String, Integer> df = new HashMap<>();
+
+        for (String term : vocabulario) {
+            int count = 0;
+            for (List<String> tokens : docsTokenizados) {
+                if (tokens.contains(term)) count++;
+            }
+            df.put(term, count);
+        }
+
+        double[] vec1 = new double[vocabulario.size()];
+        double[] vec2 = new double[vocabulario.size()];
+
+        for (int i = 0; i < vocabulario.size(); i++) {
+            String term = vocabulario.get(i);
+            long tf1 = tokens1.stream().filter(t -> t.equals(term)).count();
+            long tf2 = tokens2.stream().filter(t -> t.equals(term)).count();
+            int dfVal = df.get(term);
+            double idf = Math.log((double) N / (1 + dfVal));
+            vec1[i] = tf1 * idf;
+            vec2[i] = tf2 * idf;
+        }
+
+        return AgrupadorManual.cosineSimilarity(vec1, vec2) * 100.0;
+    }
+
 
 //    !METODOS
 
