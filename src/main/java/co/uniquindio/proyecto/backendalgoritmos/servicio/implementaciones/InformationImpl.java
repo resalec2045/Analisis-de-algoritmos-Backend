@@ -65,7 +65,7 @@ public class InformationImpl implements InformationServicio {
         return modelFront;
     }
 
-//    * Seguimiento 2
+    //    * Seguimiento 2
 //    ! Medoto para AGNES
     @Override
     public Map<String, Object> preprocesamientoTextoAgnes() {
@@ -98,7 +98,7 @@ public class InformationImpl implements InformationServicio {
         return clusteringServiceSmile.convertirClusterAJson(clusteringServiceSmile.clusterizarPalabras(palabras));
     }
 
-//    ! Medoto para Diana
+    //    ! Medoto para Diana
     @Override
     public Map<String, Object> preprocesamientoTextoDiana() {
         List<String> abstracts = new ArrayList<>();
@@ -133,7 +133,7 @@ public class InformationImpl implements InformationServicio {
         return DivisiveClusteringSmile.clusteringDivisivoJson(palabras);
     }
 
-//    ! Descripcion utiliizada
+    //    ! Descripcion utiliizada
     @Override
     public String preprocesamientoDescriptionUtiliced() {
         List<String> abstracts = new ArrayList<>();
@@ -267,7 +267,7 @@ public class InformationImpl implements InformationServicio {
             }
         }
 
-        Map <String, Object> coWordNetwork = CoWordNetworkBuilder.construirCoWordNetworkMitad(abstracts, PreprocesamientoTexto.preprocesarTexto(abstracts));
+        Map<String, Object> coWordNetwork = CoWordNetworkBuilder.construirCoWordNetworkMitad(abstracts, PreprocesamientoTexto.preprocesarTexto(abstracts));
 
         return coWordNetwork;
     }
@@ -290,13 +290,14 @@ public class InformationImpl implements InformationServicio {
             }
         }
 
-        int limite = Math.max(1, abstracts.size() / 50); // Puedes ajustar esto según tus necesidades
+        int limite = Math.max(1, abstracts.size() / 500); // Puedes ajustar esto según tus necesidades
         List<String> sublista = abstracts.subList(0, Math.min(limite, abstracts.size()));
 
         // Crear tabla de comparaciones
-        List<String> comparaciones = new ArrayList<>();
+        List<Map<String, Object>> comparaciones = new ArrayList<>();
         for (int i = 0; i < sublista.size(); i++) {
             for (int j = i + 1; j < sublista.size(); j++) {
+                Map<String, Object> comparacion = new LinkedHashMap<>();
                 String a1 = sublista.get(i);
                 String a2 = sublista.get(j);
 
@@ -307,16 +308,19 @@ public class InformationImpl implements InformationServicio {
                 String resumen1 = a1.length() > 150 ? a1.substring(0, 150) + "..." : a1;
                 String resumen2 = a2.length() > 150 ? a2.substring(0, 150) + "..." : a2;
 
-                String linea = String.format(
-                        "Comparación:\n- A: \"%s\"\n- B: \"%s\"\n→ Jaccard: %.2f%% | TF-IDF: %.2f%%\n",
-                        resumen1, resumen2, jaccard, tfidf
-                );
 
-                comparaciones.add(linea);
+                comparacion.put("Comparación 1", resumen1);
+                comparacion.put("Comparación 2", resumen2);
+                comparacion.put("Jaccard", jaccard);
+                comparacion.put("TFIDF", tfidf);
+
+                comparaciones.add(comparacion);
+
             }
         }
 
-        resultado.put("Comparaciones", comparaciones);
+        resultado.put("comparaciones", comparaciones);
+
         return resultado;
     }
 
